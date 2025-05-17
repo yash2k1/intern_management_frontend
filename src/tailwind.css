@@ -1,13 +1,28 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+@import "tailwindcss";
 
 
-/* :root {
-  --color-primary: #002147;
-  --color-secondary: #F5A623;
+ @theme {
+  
+   --color-primary: #002147;            /* Navy Blue - Primary brand color; used in logo, header background, top navigation bar */
+  --color-white: #FFFFFF;         /* White - Background color; used for content areas, enhances readability */
+  --color-text-main: #333333;          /* Dark Gray - Main body text; ensures strong contrast with white background */
+  --color-black: #000000;      /* Black - Used sparingly for high-emphasis text or borders */
+  --color-secondary: #4A90E2;  /* Light Blue - Hover effects on buttons/links; some icons and highlights */
+  --color-accent-orange: #F5A623;      /* Orange - Accent color for call-to-action buttons and important UI elements */
+  --color-alert-light: #8B0000;              /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
+  --color-alert: #CD5C5C;              /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
+  --color-border-light: #E0E0E0;       /* Light Gray - Used for borders, table dividers, and background shading in sections */
+
 }
-
-.dark {
-  --color-primary: #001d3d;
-} */
+@layer components {
+  .typography {
+    color: var(--color-gray-950);
+    a {
+      color: var(--color-blue-500);
+      &:hover {
+        color: var(--color-blue-800);
+      }
+    }
+  }
+}
