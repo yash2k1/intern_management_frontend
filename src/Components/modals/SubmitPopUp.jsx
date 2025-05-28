@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MainButtons from '../Ui/MainButtons';
 
 const SubmitPopUp = ({ isOpen, onClose, onConfirm, student }) => {
   const [image, setImage] = useState(null);
@@ -98,18 +99,15 @@ const SubmitPopUp = ({ isOpen, onClose, onConfirm, student }) => {
 
         {/* Actions */}
         <div className="flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-full text-white text-sm bg-secondary cursor-pointer hover:bg-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onConfirm({ image, isSubmitted })}
-            className="px-4 py-2 rounded-full text-white text-sm bg-secondary cursor-pointer hover:bg-primary"
-          >
-            Submit
-          </button>
+         
+             <MainButtons
+                      title="Cancel"
+                      onClick={() => onClose()}
+                    />
+                    <MainButtons
+                      title="Submit"
+                      onClick={() => onConfirm({ image, isSubmitted })}
+                    />
         </div>
       </div>
     </div>

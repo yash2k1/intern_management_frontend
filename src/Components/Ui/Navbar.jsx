@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import drdo_logo_0 from '../../assets/drdo_logo_0.png';
 import img from '../../assets/download.png';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const navigate =useNavigate();
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const handleSignOut = () => {
     console.log("Logging out...");
@@ -19,7 +20,7 @@ const Navbar = () => {
     <header className="bg-primary dark:bg-[#001d3d] py-4 px-4 flex items-center justify-between space-x-4 overflow-hidden relative">
       {/* Left Logo */}
       <div className="flex items-center space-x-2 flex-shrink-0">
-        <img src={drdo_logo_0} alt="Emblem" className="h-8 w-auto" />
+        <img src={drdo_logo_0} alt="Emblem" className="h-8 w-auto cursor-pointer"  onClick={()=>navigate('/')} />
       </div>
 
       {/* Right Profile & Dropdown */}

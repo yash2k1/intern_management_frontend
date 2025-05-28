@@ -1,22 +1,23 @@
 import React, { useState } from 'react'
 import Navbar from '../Components/Ui/Navbar'
-import ButtonCard from '../Components/Ui/ButtonCard'
 import HrImg from  '../assets/hrImg.png'
 import mentorImg from  '../assets/mentorImg.jpg'
 import Counter from '../features/counter/Counter'
+import Footer from '../Components/Ui/Footer'
+import MainButtons from '../Components/Ui/MainButtons'
 
 const Home = () => {
   // for HR
   const buttonDataHR = [
-  { title: "Add New Interns", path: "/add-interns" },
-  { title: "Assign Mentors", path: "/assign-mentors" },
+  { title: "Add New Interns", path: "/add-new-intern" },
+  { title: "Assign Mentors", path: "/assign-mentor" },
   { title: "Ongoing projects", path: "/ongoing-projects" },
   { title: "Completed", path: "/completed" },
   { title: "Certificate Issued", path: "/certificates" },
 ];
 // for Mentor
   const buttonDataMentor = [
-  { title: "New Interns", path: "/new-interns" },
+  { title: "New Interns", path: "/assign-intern" },
   { title: "Ongoing projects", path: "/ongoing-projects" },
   { title: "Completed", path: "/completed" },
 ];
@@ -24,8 +25,10 @@ const [data,setData]=useState("");
 const [authrization,setAuthrization]=useState("");// can be "HR" or "MENTOR"
 useState(
   ()=>{
+    
     setData(buttonDataMentor);
     setAuthrization("MENTOR");
+    // setData(buttonDataHR);
     // setAuthrization("HR");
   }
   ,[]
@@ -61,14 +64,15 @@ if (!data || !authrization){
   </div>
 
   {/* Button Grid Section */}
-  <Counter/>
+  {/* <Counter/> */}
   <div className="flex-grow flex flex-col justify-center items-center px-4 py-8">
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
       {data.map((btn, index) => (
-        <ButtonCard key={index} title={btn.title} path={btn.path} />
+        <MainButtons key={index} title={btn.title} path={btn.path} className={'cursor-pointer px-4 py-2 rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-alert  transition-all  w-full aspect-auto  sm:aspect-[3/1] sm:w-60 p-4'} />
       ))}
     </div>
   </div>
+  <Footer/>
 </div>
 
   )

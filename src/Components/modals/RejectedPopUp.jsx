@@ -53,18 +53,14 @@ const RejectedPopUp = ({ isOpen, onClose, onConfirm, student, mentors = [] }) =>
 
         {/* Actions */}
         <div className="flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-full cursor-pointer text-white text-sm bg-secondary hover:bg-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onConfirm({ remark, suggestedMentor: selectedMentor })}
-            className="px-4 py-2 rounded-full cursor-pointer text-white text-sm bg-secondary hover:bg-primary"
-          >
-            Reject
-          </button>
+          <MainButtons
+            title="Cancel"
+            onClick={() => onClose()}
+          />
+          <MainButtons
+            title="Reject"
+            onClick={() =>  onConfirm({ remark, suggestedMentor: selectedMentor })}
+          />
         </div>
       </div>
     </div>

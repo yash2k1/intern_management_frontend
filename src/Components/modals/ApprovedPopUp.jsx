@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MainButtons from '../Ui/MainButtons';
 
 const ApprovedPopUp = ({ isOpen, onClose, onConfirm, student }) => {
   const [title, setTitle] = useState("Title of project...");
@@ -64,24 +65,15 @@ const ApprovedPopUp = ({ isOpen, onClose, onConfirm, student }) => {
 
         {/* Actions */}
         <div className="flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-full text-white text-sm bg-secondary hover:bg-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() =>
-              onConfirm({
-                title,
-                subTitle,
-                description,
-              })
-            }
-            className="px-4 py-2 rounded-full text-white text-sm bg-secondary hover:bg-primary"
-          >
-            Accepted
-          </button>
+
+          <MainButtons
+            title="Cancel"
+            onClick={() => onClose()}
+          />
+          <MainButtons
+            title="Accepted"
+            onClick={() => onConfirm({ title, subTitle, description })}
+          />
         </div>
       </div>
     </div>

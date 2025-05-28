@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../Components/Ui/Navbar';
-import SubmitPopUp from '../Components/Popups/SubmitPopUp';
+import SubmitPopUp from '../Components/modals/SubmitPopUp';
 
 const OngoingProjects = () => {
     // Simulated API data

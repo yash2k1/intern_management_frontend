@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../Components/Ui/Navbar';
-import RejectedPopUp from '../Components/Popups/RejectedPopUp';
-import ApprovedPopUp from '../Components/Popups/ApprovedPopUp';
+import RejectedPopUp from '../Components/modals/RejectedPopUp';
+import ApprovedPopUp from '../Components/modals/ApprovedPopUp';
 
-const NewInterns = () => {
+const AssignInterns = () => {
     // Simulated API data
     const fakeApiData = [
         {
@@ -159,4 +159,4 @@ const NewInterns = () => {
     );
 };
 
-export default NewInterns;
+export default AssignInterns;

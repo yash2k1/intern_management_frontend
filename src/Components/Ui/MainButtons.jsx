@@ -1,12 +1,18 @@
 import * as React from "react";
 import { useState } from "react";
 import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
-import { useNavigate } from "react-router-dom";
+import MainButtons from "./MainButtons";
 
 export default function SignInForm({ mode }) {
+  const [authMode, setAuthMode] = useState(mode);
   const [role, setRole] = useState("HR");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    // Example submission logic
+    console.log(`${authMode} submitted`);
+    // Add actual form validation and submission logic here
+  };
 
   return (
     <main className="flex-1 flex justify-center items-center px-4 py-8 sm:px-6 lg:px-8">
@@ -22,6 +28,7 @@ export default function SignInForm({ mode }) {
               type="email"
               placeholder="you@example.com"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+              required
             />
           </div>
 
@@ -34,17 +41,17 @@ export default function SignInForm({ mode }) {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder="Enter Password"
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+                required
               />
-              <button
-                type="button"
+              <MainButtons
+                title={showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                type="button"
                 aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
-              </button>
+              />
             </div>
           </div>
 
@@ -78,27 +85,24 @@ export default function SignInForm({ mode }) {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
+          <MainButtons
+            title={authMode === "signIn" ? "Login" : "Register"}
+            onClick={handleSubmit}
             className="w-full bg-[#4A90E2] hover:bg-[#3a7fd9] text-white py-2 rounded shadow transition duration-200"
-          >
-            {mode === "signIn" ? "Login" : "Register"}
-          </button>
+          />
 
           {/* Links */}
           <div className="text-sm flex flex-col sm:flex-row justify-between mt-4">
-            <div
+            <MainButtons
+              title={authMode !== "signIn" ? "Login?" : "Register?"}
+              onClick={() => setAuthMode(authMode === "signIn" ? "signUp" : "signIn")}
               className="text-black dark:text-white underline mb-2 sm:mb-0 cursor-pointer"
-              onClick={() => navigate(`/${mode !== "signIn" ? "signIn" : "signUp"}`)}
-            >
-              {mode !== "signIn" ? "Login" : "Register"}?
-            </div>
-            <div
+            />
+            <MainButtons
+              title={"Forgot password?"}
+              path="/forgot-password"
               className="text-black dark:text-white underline cursor-pointer"
-              onClick={() => navigate("/forgot-password")}
-            >
-              Forgot password?
-            </div>
+            />
           </div>
         </form>
       </div>
