@@ -12,6 +12,34 @@ export default function SignInForm({ mode }) {
     <main className="flex-1 flex justify-center items-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="w-full max-w-[500px] sm:max-w-md bg-white dark:bg-gray-800 border border-[#002147] dark:border-gray-600 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
         <form className="space-y-4">
+
+          {(mode === "signUp") &&
+            <>
+              {/* first Name  */}
+              <div>
+                <label htmlFor="fname" className="block text-sm font-medium mb-1">
+                  First Name
+                </label>
+                <input
+                  id="fname"
+                  type="text"
+                  placeholder="Vikram"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+              {/* Last Name  */}
+              <div>
+                <label htmlFor="lname" className="block text-sm font-medium mb-1">
+                  Last Name
+                </label>
+                <input
+                  id="lname"
+                  type="text"
+                  placeholder="Sarabhai"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+                />
+              </div>
+            </>}
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
@@ -40,7 +68,7 @@ export default function SignInForm({ mode }) {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}

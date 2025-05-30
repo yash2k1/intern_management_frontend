@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MainButtons from '../Components/Ui/MainButtons';
 
 const funnyLines = [
   "You've taken a wrong turn at the internet crossroads.",
@@ -33,15 +34,13 @@ export default function NotFound() {
       <h1 className="text-6xl font-extrabold text-[#4A90E2] mb-4">404</h1>
       <p className="text-2xl font-semibold mb-4">Page Not Found</p>
       <p className="text-lg italic text-gray-700 dark:text-gray-300 mb-8">{line}</p>
-    
-      <button
+
+      <MainButtons
+        title={"Go to Home"}
         onClick={() => navigate("/")}
-        className="relative px-6 py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg hover:from-indigo-600 hover:to-purple-700 transition duration-300 overflow-hidden group"
-      >
-        <span className="cursor-pointer absolute inset-0 bg-white opacity-10 blur-sm group-hover:animate-ping" />
-        Go to Home
-      </button>
-    
+        className="relative cursor-pointer px-6 py-3 text-white font-semibold rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 shadow-lg hover:from-indigo-600 hover:to-purple-700 transition duration-300 overflow-hidden group"
+      />
+
     </div>
   );
 }

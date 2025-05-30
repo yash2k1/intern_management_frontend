@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MainButtons from '../Ui/MainButtons';
 
 const RejectedPopUp = ({ isOpen, onClose, onConfirm, student, mentors = [] }) => {
   const [remark, setRemark] = useState('');

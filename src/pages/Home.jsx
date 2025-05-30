@@ -13,6 +13,8 @@ const Home = () => {
   { title: "Assign Mentors", path: "/assign-mentor" },
   { title: "Ongoing projects", path: "/ongoing-projects" },
   { title: "Completed", path: "/completed" },
+  { title: "Members", path: "/members" },
+  { title: "Registration Request", path: "/registration-request" },
   { title: "Certificate Issued", path: "/certificates" },
 ];
 // for Mentor
@@ -20,6 +22,9 @@ const Home = () => {
   { title: "New Interns", path: "/assign-intern" },
   { title: "Ongoing projects", path: "/ongoing-projects" },
   { title: "Completed", path: "/completed" },
+  { title: "Members", path: "/members" },
+  { title: "Registration Request", path: "/registration-request" },
+
 ];
 const [data,setData]=useState("");
 const [authrization,setAuthrization]=useState("");// can be "HR" or "MENTOR"

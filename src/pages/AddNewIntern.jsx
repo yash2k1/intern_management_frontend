@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Navbar from '../Components/Ui/Navbar';
 import dummyImage from '../assets/download.png'
 import imagesUpload from '../assets/imagesUpload.png'
+import MainButtons from '../Components/Ui/MainButtons';
+import Footer from '../Components/Ui/Footer';
 const AddNewIntern = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -114,8 +116,9 @@ const AddNewIntern = () => {
     : [];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col">
+   <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white flex flex-col">
       <Navbar />
+    <div className=" dark:bg-gray-900 text-text-main dark:text-white max-w-6xl mx-auto py-6 flex-grow flex flex-col w-full  px-4">
       <form
         className="max-w-6xl m-4 sm:mx-auto p-6 bg-white text-gray-800 border border-gray-300 rounded-md shadow-md"
         onSubmit={handleSubmit}
@@ -135,13 +138,12 @@ const AddNewIntern = () => {
                   alt="Profile Preview"
                   className="my-4 w-40 h-40 object-cover rounded-md border border-gray-300 shadow"
                 />
-                <button
-                  type="button"
+                <MainButtons
+                  type="Cancel Image"
                   onClick={cancelImage}
                   className="mt-2 px-3 py-1 text-sm text-red-600 hover:text-red-800 focus:outline-none cursor-pointer"
-                >
-                  Cancel Image
-                </button>
+                />
+                
               </>
             ) : (
               <>
@@ -263,15 +265,12 @@ const AddNewIntern = () => {
                         }
                         className="border p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary"
                       />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleSemesterMarksChange(sem, 'PENDING...')
-                        }
-                        className="bg-primary text-white px-2 py-1 rounded hover:bg-secondary w-full sm:w-auto"
-                      >
-                        Set Pending
-                      </button>
+                    
+                       <MainButtons
+              title={ 'Set Pending'}
+                onClick={() =>  handleSemesterMarksChange(sem, 'PENDING...')}
+             
+            />
                     </div>
                   </div>
                 ))}
@@ -314,24 +313,23 @@ const AddNewIntern = () => {
               </>
             )}
           </div>
-        <div className="mt-6 flex flex-col sm:flex-row gap-4">
-          <button
-            type="submit"
-            className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded w-full sm:w-auto"
-          >
-            Add New Intern
-          </button>
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="bg-primary hover:bg-secondary text-white px-4 py-2 rounded w-full sm:w-auto"
-          >
-            Cancel
-          </button>
+        <div className="mt-6 flex flex-col items-center sm:justify-end sm:flex-row gap-4">
+           <MainButtons
+              title={ 'Add New Intern'}
+              onClick={handleSubmit}
+             
+            />
+            <MainButtons
+              title={"Cancel"}
+              onClick={()=>handleCancel()}
+            
+            />
         </div>
 
         
       </form>
+    </div>
+    <Footer/>
     </div>
   );
 };
