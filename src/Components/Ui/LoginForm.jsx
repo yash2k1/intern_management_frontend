@@ -15,30 +15,19 @@ export default function SignInForm({ mode }) {
 
           {(mode === "signUp") &&
             <>
-              {/* first Name  */}
+              {/* Full  Name  */}
               <div>
-                <label htmlFor="fname" className="block text-sm font-medium mb-1">
-                  First Name
+                <label htmlFor="fullname" className="block text-sm font-medium mb-1">
+                   Full Name
                 </label>
                 <input
-                  id="fname"
+                  id="name"
                   type="text"
-                  placeholder="Vikram"
+                  placeholder="Dr. Vikram Sarabhai"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
                 />
               </div>
-              {/* Last Name  */}
-              <div>
-                <label htmlFor="lname" className="block text-sm font-medium mb-1">
-                  Last Name
-                </label>
-                <input
-                  id="lname"
-                  type="text"
-                  placeholder="Sarabhai"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
-                />
-              </div>
+              
             </>}
           {/* Email */}
           <div>
