@@ -33,8 +33,8 @@ useState(
     
     setData(buttonDataMentor);
     setAuthrization("MENTOR");
-    // setData(buttonDataHR);
-    // setAuthrization("HR");
+    setData(buttonDataHR);
+    setAuthrization("HR");
   }
   ,[]
 )

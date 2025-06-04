@@ -12,7 +12,7 @@ const Members = () => {
     const [pendingChange, setPendingChange] = useState({ member: null, newDesignation: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-
+    const [isHr, setisHr] = useState(true);//temp- this ensure only hr can change the role of user-intern,mentor,hr
     const fakeApiData = [
         { id: 1, name: 'John Doe', email: 'john@example.com', designation: 'INTERN' },
         { id: 2, name: 'Jane Smith', email: 'jane@example.com', designation: 'HR' },
@@ -119,7 +119,7 @@ const Members = () => {
                                 <th className="px-4 py-2 border">Name</th>
                                 <th className="px-4 py-2 border">Email</th>
                                 <th className="px-4 py-2 border">Designation</th>
-                                <th className="px-4 py-2 border">Actions</th>
+                                {isHr && <th className="px-4 py-2 border">Actions</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -142,8 +142,8 @@ const Members = () => {
                                         <td className="px-4 py-2 border">{member.name}</td>
                                         <td className="px-4 py-2 border">{member.email}</td>
                                         <td className="px-4 py-2 border">{member.designation}</td>
-                                        <td className="px-4 py-2 border">
-                                            <select
+                                       {isHr && <td className="px-4 py-2 border flex justify-center">
+                                             <select
                                                 value={member.designation}
                                                 onChange={(e) => openConfirmationModal(member, e.target.value)}
                                                 className="p-1 rounded border dark:bg-gray-700"
@@ -152,7 +152,7 @@ const Members = () => {
                                                 <option value="HR">HR</option>
                                                 <option value="MENTOR">MENTOR</option>
                                             </select>
-                                        </td>
+                                        </td>}
                                     </tr>
                                 ))
                             )}
