@@ -15,6 +15,8 @@ const Home = () => {
   { title: "Completed", path: "/completed" },
   { title: "Members", path: "/members" },
   { title: "Registration Request", path: "/registration-request" },
+  { title: "Elevate role Request", path: "/elevate-role" },
+  { title: "Project List ", path: "/project-list" },
   { title: "Certificate Issued", path: "/certificates" },
 ];
 // for Mentor
@@ -23,6 +25,7 @@ const Home = () => {
   { title: "Ongoing projects", path: "/ongoing-projects" },
   { title: "Completed", path: "/completed" },
   { title: "Members", path: "/members" },
+  { title: "Project List ", path: "/project-list" },
   { title: "Registration Request", path: "/registration-request" },
 
 ];
@@ -33,11 +36,22 @@ useState(
     
     setData(buttonDataMentor);
     setAuthrization("MENTOR");
-    setData(buttonDataHR);
-    setAuthrization("HR");
+    // setData(buttonDataHR);
+    // setAuthrization("HR");
   }
   ,[]
 )
+// temp
+function changeAuth(){
+  if (authrization=="MENTOR"){
+    setData(buttonDataHR);
+    setAuthrization("HR");
+  }  
+  else if (authrization=="HR"){
+   setData(buttonDataMentor);
+    setAuthrization("MENTOR");
+  }
+}
 if (!data || !authrization){
   return(  
   <div className="min-h-screen items-center justify-center  bg-white dark:bg-gray-900 text-black dark:text-white flex flex-col">
@@ -55,6 +69,7 @@ if (!data || !authrization){
     className="relative h-52 w-full flex items-end px-8 py-6"
     style={{
       background: 'linear-gradient(to bottom, #4A90E2, #002147)', 
+      background: 'linear-gradient(to bottom, #4A90E2, #002147)', 
     }}
   >
     {/* Text */}
@@ -70,6 +85,8 @@ if (!data || !authrization){
 
   {/* Button Grid Section */}
   {/* <Counter/> */}
+  {/* temp */}
+  <MainButtons onClick={()=>changeAuth()}title={`Temporary btn ${authrization}`} className={'cursor-pointer px-4 py-2 my-4 mx-auto rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-secondary  transition-all  w-50 aspect-auto  sm:aspect-[3/1] sm:w-60 p-4'}/>
   <div className="flex-grow flex flex-col justify-center items-center px-4 py-8">
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
       {data.map((btn, index) => (
@@ -77,6 +94,7 @@ if (!data || !authrization){
       ))}
     </div>
   </div>
+  
   <Footer/>
 </div>
 

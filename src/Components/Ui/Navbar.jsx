@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import drdo_logo_0 from '../../assets/drdo_logo_0.png';
 import img from '../../assets/download.png';
 import { useNavigate } from 'react-router-dom';
 import MainButtons from './MainButtons';
-import DeleteUserModal from '../modals/deleteUserPopUp'; // ✅ Add the modal import
+import DeleteUserModal from '../modals/deleteUserPopUp'; 
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // ✅ State for modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false); 
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const handleSignOut = () => {
     console.log("Logging out...");
+    navigate('/sign-up');
     // Add logout logic here
   };
 
   const handleSignInAnother = () => {
     console.log("Signing in with another account...");
+    navigate('/sign-in');
     // Add redirect logic here
   };
 
@@ -61,6 +63,15 @@ const Navbar = () => {
                 }}
                 className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"}
               />
+              {/* only for mentor */}
+              <MainButtons
+                title={"Requrest HR Role"}
+                onClick={()=>{
+                  //pending... implement during API integration
+                 setIsDropdownOpen(false);
+                }}
+                className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"}
+              />
               <MainButtons
                 title={"Log Out"}
                 onClick={()=>{
@@ -82,7 +93,7 @@ const Navbar = () => {
         </div>
       </header>
 
-      {/* ✅ Delete Modal */}
+      {/* Delete Modal */}
       <DeleteUserModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}

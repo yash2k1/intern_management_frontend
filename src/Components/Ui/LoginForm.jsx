@@ -1,24 +1,23 @@
-import * as React from "react";
 import { useState } from "react";
 import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
+import MainButtons from "./MainButtons";
 import { useNavigate } from "react-router-dom";
 
 export default function SignInForm({ mode }) {
   const [role, setRole] = useState("HR");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
   return (
     <main className="flex-1 flex justify-center items-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="w-full max-w-[500px] sm:max-w-md bg-white dark:bg-gray-800 border border-[#002147] dark:border-gray-600 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
         <form className="space-y-4">
 
-          {(mode === "signUp") &&
+          {(mode === "sign-up") &&
             <>
               {/* Full  Name  */}
               <div>
                 <label htmlFor="fullname" className="block text-sm font-medium mb-1">
-                   Full Name
+                  Full Name
                 </label>
                 <input
                   id="name"
@@ -27,7 +26,7 @@ export default function SignInForm({ mode }) {
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
                 />
               </div>
-              
+
             </>}
           {/* Email */}
           <div>
@@ -99,23 +98,26 @@ export default function SignInForm({ mode }) {
             type="submit"
             className="w-full bg-[#4A90E2] hover:bg-[#3a7fd9] text-white py-2 rounded shadow transition duration-200"
           >
-            {mode === "signIn" ? "Login" : "Register"}
+            {mode === "sign-in" ? "Login" : "Register"}
           </button>
 
           {/* Links */}
-          <div className="text-sm flex flex-col sm:flex-row justify-between mt-4">
-            <div
-              className="text-black dark:text-white underline mb-2 sm:mb-0 cursor-pointer"
-              onClick={() => navigate(`/${mode !== "signIn" ? "signIn" : "signUp"}`)}
-            >
-              {mode !== "signIn" ? "Login" : "Register"}?
-            </div>
-            <div
+          <div className="text-sm flex flex-col sm:flex-row justify-between mt-4 gap-2">
+            <MainButtons
               className="text-black dark:text-white underline cursor-pointer"
-              onClick={() => navigate("/forgot-password")}
-            >
-              Forgot password?
-            </div>
+              onClick={() => navigate(`/${mode !== "sign-in" ? "sign-in" : "sign-up"}`)}
+              title={`${mode !== "sign-in" ? "Login" : "Register"}?`}
+            />
+            <MainButtons
+              className="text-black dark:text-white underline cursor-pointer"
+              path={"/forgot-password"}
+              title={"Forgot password?"}
+            />
+            {mode == "sign-in" && <MainButtons
+              className="text-black dark:text-white underline cursor-pointer"
+              path={"/change-password"}
+              title={"Change password?"}
+            />}
           </div>
         </form>
       </div>
