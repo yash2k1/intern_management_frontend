@@ -8,9 +8,9 @@ export default function SignInForm({ mode }) {
   const [role, setRole] = useState("HR");
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
+    // role
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -35,9 +35,10 @@ export default function SignInForm({ mode }) {
           email: formData.email,
           password: formData.password,
         }
+
         //{ withCredentials: true }
       );
-      console.log("after const");
+      console.log("after const",data);
       // store token or user info if your API returns one
       // if (data.token) localStorage.setItem("token", data.token);
 
@@ -97,6 +98,8 @@ export default function SignInForm({ mode }) {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={(e)=> setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••"
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
               />

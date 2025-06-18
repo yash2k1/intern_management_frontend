@@ -54,14 +54,14 @@ function changeAuth(){
 }
 if (!data || !authrization){
   return(  
-  <div className="min-h-screen items-center justify-center  bg-white dark:bg-gray-900 text-black dark:text-white flex flex-col">
+  <div className="min-h-screen items-center justify-center  bg-white dark:dark:bg-background text-black dark:text-white flex flex-col">
      Rendering...
     </div>
     )
 }else{
  return (
 
-   <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white flex flex-col">
+   <div className="min-h-screen bg-white dark:dark:bg-background text-black dark:text-white flex flex-col">
   <Navbar />
 
   {/* Banner Section */}
@@ -90,7 +90,7 @@ if (!data || !authrization){
   <div className="flex-grow flex flex-col justify-center items-center px-4 py-8">
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
       {data.map((btn, index) => (
-        <MainButtons key={index} title={btn.title} path={btn.path} className={'cursor-pointer px-4 py-2 rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-alert  transition-all  w-full aspect-auto  sm:aspect-[3/1] sm:w-60 p-4'} />
+        <MainButtons key={index} title={btn.title} path={btn.path} className={'cursor-pointer px-4 py-2 rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-primary  transition-all  w-full aspect-auto  sm:aspect-[3/1] sm:w-60 p-4'} />
       ))}
     </div>
   </div>

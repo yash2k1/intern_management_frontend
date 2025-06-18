@@ -1,20 +1,33 @@
-
 @import "tailwindcss";
 
-
- @theme {
+@custom-variant dark (&:where(.dark, .dark *));
+@theme{
+    --color-primary: #002147; /* Navy Blue - Primary brand color; used in logo, header background, top navigation bar */
+    --color-background: #ffffff;
+    --color-white: #ffffff; /* White - Background color; used for content areas, enhances readability */
+    --color-text-main: #333333; /* Dark Gray - Main body text; ensures strong contrast with white background */
+    --color-black-color: #000000; /* Black - Used sparingly for high-emphasis text or borders */
+    --color-secondary: #4a90e2; /* Light Blue - Hover effects on buttons/links; some icons and highlights */
+    --color-accent-orange: #f5a623; /* Orange - Accent color for call-to-action buttons and important UI elements */
+    --color-alert-light: #8b0000; /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
+    --color-alert: #cd5c5c; /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
+    --color-border-light: #e0e0e0; /* Light Gray - Used for borders, table dividers, and background shading in sections */
   
-   --color-primary: #002147;            /* Navy Blue - Primary brand color; used in logo, header background, top navigation bar */
-  --color-white: #FFFFFF;         /* White - Background color; used for content areas, enhances readability */
-  --color-text-main: #333333;          /* Dark Gray - Main body text; ensures strong contrast with white background */
-  --color-black: #000000;      /* Black - Used sparingly for high-emphasis text or borders */
-  --color-secondary: #4A90E2;  /* Light Blue - Hover effects on buttons/links; some icons and highlights */
-  --color-accent-orange: #F5A623;      /* Orange - Accent color for call-to-action buttons and important UI elements */
-  --color-alert-light: #8B0000;              /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
-  --color-alert: #CD5C5C;              /* Dark Red / Maroon - Occasional highlight color; used in buttons or alerts */
-  --color-border-light: #E0E0E0;       /* Light Gray - Used for borders, table dividers, and background shading in sections */
-
 }
+
+.dark {
+  --color-primary: #1e3a5f;             /* Slightly lighter navy for better dark contrast */
+  --color-background: #111827;         /* Tailwind gray-900 – clean dark background */
+  --color-white: #f9fafb;              /* Near-white for better readability on dark */
+  --color-text-main: #d1d5db;          /* Tailwind gray-300 – readable text */
+  --color-black-color: #000000;        /* Keep for strict black where needed */
+  --color-secondary: #3b82f6;          /* Tailwind blue-500 – consistent button color */
+  --color-accent-orange: #f59e0b;      /* Tailwind amber-500 – vibrant but soft orange */
+  --color-alert-light: #f87171;        /* Tailwind red-400 – warning, hover, alerts */
+  --color-alert: #dc2626;              /* Tailwind red-600 – strong alert action */
+  --color-border-light: #1f2937;       /* Tailwind gray-800 – subtle borders */
+}
+
 @layer components {
   .typography {
     color: var(--color-gray-950);

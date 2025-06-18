@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import drdo_logo_0 from "../../assets/drdo_logo_0.png";
 import img from "../../assets/download.png";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,9 @@ import DeleteUserModal from "../modals/deleteUserPopUp";
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -29,6 +32,16 @@ const Navbar = () => {
     setShowDeleteModal(false);
     // Add real deletion logic here
   };
+  useEffect(() => {
+    const html = document.documentElement;
+    if (isDark) {
+      html.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      html.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
 
   return (
     <>
@@ -72,6 +85,7 @@ const Navbar = () => {
                   "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
                 }
               />
+
               {/* only for mentor */}
               <MainButtons
                 title={"Request HR Role"}
@@ -83,6 +97,16 @@ const Navbar = () => {
                   "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
                 }
               />
+              {/* 🌗 Dark/Light Mode Toggle */}
+              <button
+                onClick={() => {
+                  setIsDark(!isDark);
+                  setIsDropdownOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white rounded-b-lg"
+              >
+                {isDark ? 'Light Mode ☀️' : 'Dark Mode 🌙'}
+              </button>
               <MainButtons
                 title={"Log Out"}
                 onClick={() => {
@@ -107,6 +131,7 @@ const Navbar = () => {
           )}
         </div>
       </header>
+
 
       {/* Delete Modal */}
       <DeleteUserModal
