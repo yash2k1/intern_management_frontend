@@ -1,26 +1,26 @@
-import { useState } from 'react';
-import drdo_logo_0 from '../../assets/drdo_logo_0.png';
-import img from '../../assets/download.png';
-import { useNavigate } from 'react-router-dom';
-import MainButtons from './MainButtons';
-import DeleteUserModal from '../modals/deleteUserPopUp'; 
+import { useState } from "react";
+import drdo_logo_0 from "../../assets/drdo_logo_0.png";
+import img from "../../assets/download.png";
+import { useNavigate } from "react-router-dom";
+import MainButtons from "./MainButtons";
+import DeleteUserModal from "../modals/deleteUserPopUp";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const handleSignOut = () => {
     console.log("Logging out...");
-    navigate('/sign-up');
+    navigate("/sign-up");
     // Add logout logic here
   };
 
   const handleSignInAnother = () => {
     console.log("Signing in with another account...");
-    navigate('/sign-in');
+    navigate("/sign-in");
     // Add redirect logic here
   };
 
@@ -35,7 +35,12 @@ const Navbar = () => {
       <header className="bg-primary dark:bg-[#001d3d] py-4 px-4 flex items-center justify-between space-x-4 overflow-hidden relative">
         {/* Left Logo */}
         <div className="flex items-center space-x-2 flex-shrink-0">
-          <img src={drdo_logo_0} alt="Emblem" className="h-8 w-auto cursor-pointer" onClick={() => navigate('/')} />
+          <img
+            src={drdo_logo_0}
+            alt="Emblem"
+            className="h-8 w-auto cursor-pointer"
+            onClick={() => navigate("/")}
+          />
         </div>
 
         {/* Right Profile & Dropdown */}
@@ -49,7 +54,9 @@ const Navbar = () => {
               alt="Profile"
               className="h-6 w-6 mx-1 sm:h-8 sm:w-8 sm:mx-4 rounded-full object-cover"
             />
-            <div className="truncate max-w-[120px] text-sm leading-tight">Mr. Yash Gupta</div>
+            <div className="truncate max-w-[120px] text-sm leading-tight">
+              Mr. Yash Gupta
+            </div>
           </div>
 
           {/* Dropdown Menu */}
@@ -57,36 +64,44 @@ const Navbar = () => {
             <div className="fixed right-2 mt-2 w-56 rounded-lg shadow-lg z-50 text-sm">
               <MainButtons
                 title={"Sign in with another account"}
-                onClick={()=>{
+                onClick={() => {
                   handleSignInAnother();
-                 setIsDropdownOpen(false);
+                  setIsDropdownOpen(false);
                 }}
-                className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"}
+                className={
+                  "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
+                }
               />
               {/* only for mentor */}
               <MainButtons
-                title={"Requrest HR Role"}
-                onClick={()=>{
+                title={"Request HR Role"}
+                onClick={() => {
                   //pending... implement during API integration
-                 setIsDropdownOpen(false);
+                  setIsDropdownOpen(false);
                 }}
-                className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"}
+                className={
+                  "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
+                }
               />
               <MainButtons
                 title={"Log Out"}
-                onClick={()=>{
+                onClick={() => {
                   handleSignOut();
-                 setIsDropdownOpen(false);
+                  setIsDropdownOpen(false);
                 }}
-                className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"}
+                className={
+                  "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
+                }
               />
               <MainButtons
                 title={"Delete Account"}
-                onClick={()=>{
+                onClick={() => {
                   setShowDeleteModal(true);
-                 setIsDropdownOpen(false);
+                  setIsDropdownOpen(false);
                 }}
-                className={"w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-red-700 text-white rounded-b-lg"}
+                className={
+                  "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-red-700 text-white rounded-b-lg"
+                }
               />
             </div>
           )}
