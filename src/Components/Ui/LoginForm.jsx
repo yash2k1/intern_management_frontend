@@ -28,21 +28,19 @@ export default function SignInForm({ mode }) {
     console.log("Posting to:", url);
     console.log("Posting to:", url, { ...formData, role });
     try {
-      console.log("inside try block");
-      const { data } = await axios.post(
-        url,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-
-        //{ withCredentials: true }
-      );
-      console.log("after const",data);
-      // store token or user info if your API returns one
-      // if (data.token) localStorage.setItem("token", data.token);
-
-      // ✅ redirect to homepage
+      //console.log("inside try block");
+      const { data } = await axios.post(url, {
+        fullName: formData.name,
+        email: formData.email,
+        password: formData.password,
+        roleRequested: formData.role,
+      });
+      localStorage.setItem("token", data.token); // ✅ store it
+      console.log("token", data.token);
+      //console.log("after const", data);
+      if (mode === "sign-up") {
+        alert("Signup successful! Please check your email for verification.");
+      }
       navigate("/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Request failed");
@@ -66,6 +64,7 @@ export default function SignInForm({ mode }) {
                 <input
                   id="name"
                   type="text"
+                  onChange={handleChange}
                   placeholder="Dr. Vikram Sarabhai"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
                 />
@@ -99,7 +98,9 @@ export default function SignInForm({ mode }) {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={(e)=> setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 placeholder="••••••••"
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
               />

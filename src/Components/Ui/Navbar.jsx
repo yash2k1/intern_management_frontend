@@ -4,21 +4,46 @@ import img from "../../assets/download.png";
 import { useNavigate } from "react-router-dom";
 import MainButtons from "./MainButtons";
 import DeleteUserModal from "../modals/deleteUserPopUp";
+import axios from "axios";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
+    return localStorage.getItem("theme") === "dark";
   });
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  const handleSignOut = () => {
-    console.log("Logging out...");
-    navigate("/sign-up");
-    // Add logout logic here
+  const handleSignOut = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.warn("⚠️ No token found. User may already be logged out.");
+        return navigate("/sign-in");
+      }
+
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/user/signout`,
+        //"http://localhost:5000/user/signout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // ✅ Remove token locally
+      localStorage.removeItem("token");
+
+      // ✅ Redirect to login page
+      navigate("/sign-in");
+    } catch (error) {
+      console.error("Signout failed:", error);
+    }
   };
 
   const handleSignInAnother = () => {
@@ -35,11 +60,11 @@ const Navbar = () => {
   useEffect(() => {
     const html = document.documentElement;
     if (isDark) {
-      html.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
-      html.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [isDark]);
 
@@ -105,7 +130,7 @@ const Navbar = () => {
                 }}
                 className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white rounded-b-lg"
               >
-                {isDark ? 'Light Mode ☀️' : 'Dark Mode 🌙'}
+                {isDark ? "Light Mode ☀️" : "Dark Mode 🌙"}
               </button>
               <MainButtons
                 title={"Log Out"}
@@ -131,7 +156,6 @@ const Navbar = () => {
           )}
         </div>
       </header>
-
 
       {/* Delete Modal */}
       <DeleteUserModal

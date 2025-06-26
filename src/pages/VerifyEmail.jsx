@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import OTPInputBox from "../Components/Ui/OTPInputBox";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const VerifyEmail = () => {
   const [otpValues, setOtpValues] = useState({
@@ -13,32 +15,62 @@ const VerifyEmail = () => {
 
   const [message, setMessage] = useState("");
 
-const handleValueChange = (id, value) => {
-  const newOtp = { ...otpValues };
-  const keys = Object.keys(newOtp);
+  const handleValueChange = (id, value) => {
+    const newOtp = { ...otpValues };
+    const keys = Object.keys(newOtp);
 
-  // Find the first empty key from left to current index
-  const currentIndex = keys.indexOf(id);
-  const firstEmptyIndex = keys.findIndex((key, idx) => idx <= currentIndex && newOtp[key] === "");
+    // Find the first empty key from left to current index
+    const currentIndex = keys.indexOf(id);
+    const firstEmptyIndex = keys.findIndex(
+      (key, idx) => idx <= currentIndex && newOtp[key] === ""
+    );
 
-  if (firstEmptyIndex !== -1) {
-    const emptyKey = keys[firstEmptyIndex];
-    newOtp[emptyKey] = value;
-    setOtpValues(newOtp);
-  } else {
-    // fallback to current id
-    newOtp[id] = value;
-    setOtpValues(newOtp);
-  }
-};
-
-
-  const handleSubmit = () => {
-    const otp = Object.values(otpValues).join("");
-    if (otp.length === 6) {
-      setMessage(`OTP Verified: ${otp}`);
+    if (firstEmptyIndex !== -1) {
+      const emptyKey = keys[firstEmptyIndex];
+      newOtp[emptyKey] = value;
+      setOtpValues(newOtp);
     } else {
+      // fallback to current id
+      newOtp[id] = value;
+      setOtpValues(newOtp);
+    }
+  };
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    const otp = Object.values(otpValues).join("");
+
+    if (otp.length !== 6) {
       setMessage("Please enter all 6 digits.");
+      return;
+    }
+
+    const queryParams = new URLSearchParams(location.search);
+    const userId = queryParams.get("userId");
+
+    if (!userId) {
+      setMessage("Missing user ID in URL.");
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/user/signup`,
+        {
+          userId,
+          otp,
+        }
+      );
+
+      setMessage("✅ Email verified successfully!");
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 1500);
+    } catch (error) {
+      console.error("Verification failed:", error);
+      setMessage(error.response?.data?.message || "Verification failed.");
     }
   };
 
@@ -61,17 +93,19 @@ const handleValueChange = (id, value) => {
         </p>
 
         <div className="flex justify-center mb-4">
-          {["otp1", "otp2", "otp3", "otp4", "otp5", "otp6"].map((id, idx, arr) => (
-            <OTPInputBox
-              key={id}
-              id={id}
-              previousId={arr[idx - 1]}
-              nextId={arr[idx + 1]}
-              value={otpValues[id]}
-              onValueChange={handleValueChange}
-              handleSubmit={handleSubmit}
-            />
-          ))}
+          {["otp1", "otp2", "otp3", "otp4", "otp5", "otp6"].map(
+            (id, idx, arr) => (
+              <OTPInputBox
+                key={id}
+                id={id}
+                previousId={arr[idx - 1]}
+                nextId={arr[idx + 1]}
+                value={otpValues[id]}
+                onValueChange={handleValueChange}
+                handleSubmit={handleSubmit}
+              />
+            )
+          )}
         </div>
 
         <button
