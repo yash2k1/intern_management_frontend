@@ -59,9 +59,9 @@ const AssignInterns = () => {
     };
 
     const handleRejectConfirm = ({ remark, suggestedMentor }) => {
-        console.log('Rejected:', selectedStudent.name);
-        console.log('Remark:', remark);
-        console.log('Suggested Mentor:', suggestedMentor);
+        //console.log('Rejected:', selectedStudent.name);
+        //console.log('Remark:', remark);
+        //console.log('Suggested Mentor:', suggestedMentor);
         setIsRejectPopupOpen(false);
     };
 

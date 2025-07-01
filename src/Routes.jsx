@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import NotFound from './pages/NotFound';
-import AuthWrapper from './pages/AuthWrapper';// this contain both sign in and sign up
+import AuthWrapper from './pages/AuthWrapper';
 import Home from './pages/Home';
 import AssignInterns from './pages/AssignInterns';
 import OngoingProjects from './pages/OngoingProjects';
@@ -18,37 +18,60 @@ import ProjectList from './pages/projectList';
 import ProjectManagement from './pages/ProjectManagement';
 import ElevateRole from './pages/ElevateRole';
 
+import ProtectedRoute from './ProtectedRoute';
+import ResetPassword from './pages/ResetPassword';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home/>} /> 
-        <Route path="/sign-in" element={<AuthWrapper />} />
-        <Route path="/sign-up" element={<AuthWrapper />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-mail" element={<VerifyEmail/>} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/assign-intern" element={<AssignInterns />} />
-        <Route path="/ongoing-projects" element={<OngoingProjects />} />
-        <Route path="/completed" element={<Completed />} />
-        <Route path="/members" element={<Members />} />
-        <Route path="/project-list" element={<ProjectList/>} />
-        <Route path="/project-list/:id" element={<ProjectManagement/>} />
-        <Route path="/registration-request" element={<RegisterRequest />} />
-        {/* for HR Only */}
-        <Route path="/add-new-intern" element={<AddNewIntern />} />
-        <Route path="/elevate-role" element={<ElevateRole />} />
-        <Route path="/assign-mentor" element={<AssignMentor />} />
-      <Route path="*" element={<NotFound/>} /> 
-      
+      {/* Public Routes */}
+      <Route path="/sign-in" element={<AuthWrapper />} />
+      <Route path="/sign-up" element={<AuthWrapper />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="*" element={<NotFound />} />
+
+      {/* Protected Routes */}
+      <Route path="/" element={
+        <ProtectedRoute><Home /></ProtectedRoute>
+      } />
+      <Route path="/change-password" element={
+         <ProtectedRoute><ChangePassword /></ProtectedRoute>
+        } />
+      <Route path="/assign-intern" element={
+        <ProtectedRoute><AssignInterns /></ProtectedRoute>
+      } />
+      <Route path="/ongoing-projects" element={
+        <ProtectedRoute><OngoingProjects /></ProtectedRoute>
+      } />
+      <Route path="/completed" element={
+        <ProtectedRoute><Completed /></ProtectedRoute>
+      } />
+      <Route path="/members" element={
+        <ProtectedRoute><Members /></ProtectedRoute>
+      } />
+      <Route path="/project-list" element={
+        <ProtectedRoute><ProjectList /></ProtectedRoute>
+      } />
+      <Route path="/project-list/:id" element={
+        <ProtectedRoute><ProjectManagement /></ProtectedRoute>
+      } />
+      <Route path="/registration-request" element={
+        <ProtectedRoute><RegisterRequest /></ProtectedRoute>
+      } />
+      {/* for HR Only */}
+      <Route path="/add-new-intern" element={
+        <ProtectedRoute><AddNewIntern /></ProtectedRoute>
+      } />
+      <Route path="/elevate-role" element={
+        <ProtectedRoute><ElevateRole /></ProtectedRoute>
+      } />
+      <Route path="/assign-mentor" element={
+        <ProtectedRoute><AssignMentor /></ProtectedRoute>
+      } />
     </Routes>
   );
 };
 
 export default AppRoutes;
-
-// figma- 50-60%
-// frontend-80-90%
-// frontend Api integration-
-// backend-
-// db-

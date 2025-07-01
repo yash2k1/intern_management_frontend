@@ -1,29 +1,52 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainButtons from "../Components/Ui/MainButtons";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // <-- loading state added
   const navigate = useNavigate();
 
+  const toastErrorStyle = {
+    background: "#fee2e2",
+    color: "#b91c1c",
+    fontWeight: "bold",
+  };
+
   const handleSubmit = async (e) => {
-    e?.preventDefault(); // ✅ Safely handle event if it's passed
+    e?.preventDefault();
 
     if (email.trim() === "") {
-      return setMessage("Please enter a valid email address.");
+      return toast.error("Please enter a valid email address.", {
+        style: toastErrorStyle,
+      });
     }
 
     try {
-      // ✅ Simulated API call
-      setMessage("A password reset link has been sent to your email.");
-      
-      // Optionally simulate delay (remove in real code)
+      setLoading(true); // start loading before API call
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/user/forgot-password`,
+        { email }
+      );
+
+      toast.success(data.message || "Password reset link sent!");
+
+      setEmail("");
       setTimeout(() => {
-        navigate("/verify-mail");
-      }, 1000);
+        navigate("/sign-in");
+      }, 1500);
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again.",
+        {
+          style: toastErrorStyle,
+          icon: "❌",
+        }
+      );
+    } finally {
+      setLoading(false); // stop loading after API call finishes
     }
   };
 
@@ -51,16 +74,11 @@ const ForgotPassword = () => {
 
           <MainButtons
             type="submit"
-            title="Send Reset Link"
+            title={loading ? "Sending..." : "Send Reset Link"}
             onClick={(e) => handleSubmit(e)}
-            className="w-full bg-[#4A90E2] hover:bg-[#3a7fd9] cursor-pointer text-white py-2 rounded shadow transition duration-200"
+            disabled={loading}  // <-- disable button when loading
+            className={`w-full bg-[#4A90E2] hover:bg-[#3a7fd9] cursor-pointer text-white py-2 rounded shadow transition duration-200 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           />
-
-          {message && (
-            <p className="text-sm mt-2 text-center text-green-600 dark:text-green-400">
-              {message}
-            </p>
-          )}
 
           <div
             className="text-sm text-center underline text-black dark:text-white cursor-pointer mt-4"

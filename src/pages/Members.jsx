@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import Navbar from '../Components/Ui/Navbar';
 import MainButtons from '../Components/Ui/MainButtons';
 import ConfirmDesignationModal from '../Components/modals/ConfirmDesignationModal';
 import Footer from '../Components/Ui/Footer';
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode'; // npm install jwt-decode
 
 const Members = () => {
     const [members, setMembers] = useState([]);
@@ -12,57 +14,78 @@ const Members = () => {
     const [pendingChange, setPendingChange] = useState({ member: null, newDesignation: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-    const [isHr, setisHr] = useState(true);//temp- this ensure only hr can change the role of user-intern,mentor,hr
-    const fakeApiData = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', designation: 'INTERN' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', designation: 'HR' },
-        { id: 3, name: 'Alex Johnson', email: 'alex@example.com', designation: 'MENTOR' },
-        { id: 4, name: 'Priya Patel', email: 'priya@example.com', designation: 'INTERN' },
-        { id: 5, name: 'Rahul Verma', email: 'rahul@example.com', designation: 'HR' },
-        { id: 6, name: 'Sneha Kumar', email: 'sneha@example.com', designation: 'MENTOR' },
-        { id: 7, name: 'Vikram Rana', email: 'vikram@example.com', designation: 'INTERN' },
-        { id: 8, name: 'Kajal Yadav', email: 'kajal@example.com', designation: 'HR' },
-        { id: 9, name: 'Aman Jain', email: 'aman@example.com', designation: 'MENTOR' },
-        { id: 10, name: 'Neha Rathi', email: 'neha@example.com', designation: 'HR' },
-        { id: 11, name: 'Ravi Singh', email: 'ravi@example.com', designation: 'INTERN' },
-        { id: 12, name: 'Tina Das', email: 'tina@example.com', designation: 'MENTOR' }
-    ];
+    const [totalPages, setTotalPages] = useState(1);
+    const [isHr, setIsHr] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    // Extract token and role from localStorage token
+    const token = localStorage.getItem('token'); // adjust key if different
+    let role = null;
+    if(token){
+      try {
+        const decoded = jwtDecode(token);
+        role = decoded.role;
+      } catch(e) {
+        console.error('Failed to decode token:', e);
+      }
+    }
 
     useEffect(() => {
-        setTimeout(() => setMembers(fakeApiData), 500);
-    }, []);
+      setIsHr(role === 'HR' || role === 'MENTOR');
+    }, [role]);
+
+    const fetchMembers = async () => {
+        if (!token) return; // no token, no fetch
+
+        setLoading(true);
+        try {
+            const queryParams = new URLSearchParams({
+                page: currentPage.toString(),
+                limit: itemsPerPage.toString(),
+                ...(filter !== 'All' && { role: filter }),
+                ...(searchTerm && { name: searchTerm }),
+            });
+
+            const { data } = await axios.get(
+                `${import.meta.env.VITE_API_BASE_URL}/user/get-all-users?${queryParams.toString()}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            setMembers(data.users);
+            setTotalPages(data.totalPages);
+        } catch (err) {
+            console.error('Failed to fetch members:', err);
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchMembers();
+    }, [currentPage, filter, searchTerm]);
 
     const handleFilterChange = (e) => {
         setFilter(e.target.value);
-        setCurrentPage(1); // reset to first page
+        setCurrentPage(1);
     };
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1); // reset to first page
+        setCurrentPage(1);
     };
 
-    const filteredMembers = members.filter((member) => {
-        const matchesFilter = filter === 'All' || member.designation === filter;
-        const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesFilter && matchesSearch;
-    });
-
-    const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
-    const paginatedMembers = filteredMembers.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
     const openConfirmationModal = (member, newDesignation) => {
-        if (member.designation === newDesignation) return;
+        if (member.role === newDesignation) return;
         setPendingChange({ member, newDesignation });
         setShowModal(true);
     };
 
     const confirmChange = (id, newDesignation) => {
         const updated = members.map(m =>
-            m.id === id ? { ...m, designation: newDesignation } : m
+            m._id === id ? { ...m, role: newDesignation } : m
         );
         setMembers(updated);
         setShowModal(false);
@@ -106,11 +129,15 @@ const Members = () => {
                             <option value="INTERN">INTERN</option>
                             <option value="HR">HR</option>
                             <option value="MENTOR">MENTOR</option>
+                            <option value="USER">USER</option>
                         </select>
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {loading ? (
+                  <div className="text-center py-10 text-lg">Loading...</div>
+                ) : (
+                  <div className="overflow-x-auto">
                     <table className="w-full border border-gray-300 dark:border-gray-700">
                         <thead className="bg-gray-100 dark:bg-gray-700">
                             <tr>
@@ -123,50 +150,51 @@ const Members = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {paginatedMembers.length === 0 ? (
+                            {members.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="text-center py-4">
                                         No members found.
                                     </td>
                                 </tr>
                             ) : (
-                                paginatedMembers.map((member, index) => (
+                                members.map((member, index) => (
                                     <tr
-                                        key={member.id}
+                                        key={member._id}
                                         className="hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                                     >
                                         <td className="px-4 py-2 border">
                                             {(currentPage - 1) * itemsPerPage + index + 1}
                                         </td>
-                                        <td className="px-4 py-2 border">{member.id}</td>
-                                        <td className="px-4 py-2 border">{member.name}</td>
+                                        <td className="px-4 py-2 border">{member._id}</td>
+                                        <td className="px-4 py-2 border">{member.fullName}</td>
                                         <td className="px-4 py-2 border">{member.email}</td>
-                                        <td className="px-4 py-2 border">{member.designation}</td>
-                                       {isHr && <td className="px-4 py-2 border flex justify-center">
-                                             <select
-                                                value={member.designation}
+                                        <td className="px-4 py-2 border">{member.role}</td>
+                                        {isHr && (
+                                          <td className="px-4 py-2 border flex justify-center">
+                                            <select
+                                                value={member.role}
                                                 onChange={(e) => openConfirmationModal(member, e.target.value)}
                                                 className="p-1 rounded border dark:bg-gray-700"
                                             >
                                                 <option value="INTERN">INTERN</option>
                                                 <option value="HR">HR</option>
                                                 <option value="MENTOR">MENTOR</option>
+                                                <option value="USER">USER</option>
                                             </select>
-                                        </td>}
+                                          </td>
+                                        )}
                                     </tr>
                                 ))
                             )}
                         </tbody>
                     </table>
 
-                    {/* Pagination Controls */}
-                    {filteredMembers.length > itemsPerPage && (
+                    {totalPages > 1 && (
                         <div className="flex justify-between items-center mt-4">
                             <MainButtons
                                 title={"Previous"}
                                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                                className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${currentPage === 1 ? 'opacity-50 pointer-events-none' : ''
-                                    }`}
+                                className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${currentPage === 1 ? 'opacity-50 pointer-events-none' : ''}`}
                             />
                             <span className="text-sm text-gray-700 dark:text-gray-300">
                                 Page {currentPage} of {totalPages}
@@ -174,13 +202,12 @@ const Members = () => {
                             <MainButtons
                                 title={"Next"}
                                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                                className={`px-4 py-2 mb-4 bg-primary text-white rounded cursor-pointer ${currentPage === totalPages ? 'opacity-50 pointer-events-none' : ''
-                                    }`}
+                                className={`px-4 py-2 mb-4 bg-primary text-white rounded cursor-pointer ${currentPage === totalPages ? 'opacity-50 pointer-events-none' : ''}`}
                             />
                         </div>
                     )}
                 </div>
-
+                )}
 
                 <ConfirmDesignationModal
                     isOpen={showModal}
