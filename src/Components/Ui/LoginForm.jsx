@@ -58,11 +58,11 @@ export default function SignInForm({ mode }) {
       });
     } finally {
       setFormData({
-    email: "",
-    password: "",
-    name: "",
-    role: "HR",
-  });
+        email: "",
+        password: "",
+        name: "",
+        role: "HR",
+      });
       setLoading(false);
     }
   };
@@ -128,28 +128,19 @@ export default function SignInForm({ mode }) {
           <div>
             <label className="block text-sm font-medium mb-2">Role</label>
             <div className="flex flex-col sm:flex-row gap-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="HR"
-                  checked={formData.role === "HR"}
-                  onChange={() => setFormData({ ...formData, role: "HR" })}
-                  className="accent-[#002147] dark:accent-[#F5A623]"
-                />
-                <span>HR</span>
-              </label>
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="Mentor"
-                  checked={formData.role === "Mentor"}
-                  onChange={() => setFormData({ ...formData, role: "Mentor" })}
-                  className="accent-[#002147] dark:accent-[#F5A623]"
-                />
-                <span>Mentor</span>
-              </label>
+              {["HR", "MENTOR", "INTERN"].map((role) => (
+                <label key={role} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={role}
+                    checked={formData.role === role}
+                    onChange={() => setFormData({ ...formData, role })}
+                    className="accent-[#002147] dark:accent-[#F5A623]"
+                  />
+                  <span>{role}</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -184,8 +175,11 @@ export default function SignInForm({ mode }) {
               path={"/forgot-password"}
               title={"Forgot password?"}
             />
-           
-            
+                <MainButtons
+              className="text-black dark:text-white underline cursor-pointer"
+              path={"/send-verify-email"}
+              title={"Email verification?"}
+            />
           </div>
         </form>
       </div>

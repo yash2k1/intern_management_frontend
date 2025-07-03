@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import OTPInputBox from "../Components/Ui/OTPInputBox";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import MainButtons from "../Components/Ui/MainButtons";
 
 const VerifyEmail = () => {
   const [otpValues, setOtpValues] = useState({
@@ -170,8 +171,13 @@ const VerifyEmail = () => {
           </button>)
         }
 
+     
 
-
+          <MainButtons
+              className="text-black dark:text-white underline cursor-pointer mt-2 block mx-auto"
+              path={"/send-verify-email"}
+              title={"Resend Email?"}
+            />
       </form>
     </div>
   );

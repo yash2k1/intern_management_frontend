@@ -20,6 +20,10 @@ import ElevateRole from './pages/ElevateRole';
 
 import ProtectedRoute from './ProtectedRoute';
 import ResetPassword from './pages/ResetPassword';
+import SendVerificationEmailForm from './pages/SendVerificationEmailForm';
+import MyProfile from './pages/myProfile';
+import InternRegistration from './pages/InternRegistration';
+import ViewInternOrUser from './pages/viewInternOrUser';
 
 const AppRoutes = () => {
   return (
@@ -29,6 +33,7 @@ const AppRoutes = () => {
       <Route path="/sign-up" element={<AuthWrapper />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/send-verify-email" element={<SendVerificationEmailForm />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
 
@@ -60,6 +65,13 @@ const AppRoutes = () => {
       <Route path="/registration-request" element={
         <ProtectedRoute><RegisterRequest /></ProtectedRoute>
       } />
+      <Route path="/intern-registration" element={
+        <ProtectedRoute><InternRegistration /></ProtectedRoute>
+      } />
+      <Route path="/View-intern-or-user-info" element={
+        <ProtectedRoute><ViewInternOrUser /></ProtectedRoute>
+      } />
+
       {/* for HR Only */}
       <Route path="/add-new-intern" element={
         <ProtectedRoute><AddNewIntern /></ProtectedRoute>
@@ -69,6 +81,10 @@ const AppRoutes = () => {
       } />
       <Route path="/assign-mentor" element={
         <ProtectedRoute><AssignMentor /></ProtectedRoute>
+      } />
+      {/* for intern only */}
+      <Route path="/my-profile" element={
+        <ProtectedRoute><MyProfile /></ProtectedRoute>
       } />
     </Routes>
   );

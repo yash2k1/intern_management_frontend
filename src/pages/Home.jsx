@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 import Navbar from '../Components/Ui/Navbar';
 import HrImg from '../assets/hrImg.png';
 import mentorImg from '../assets/mentorImg.jpg';
+import internImg from '../assets/internImg.jpg';
 import Footer from '../Components/Ui/Footer';
 import MainButtons from '../Components/Ui/MainButtons';
 
 const Home = () => {
   const navigate = useNavigate();
 
+  // Button definitions for each role
   const buttonDataHR = [
     { title: "Add New Interns", path: "/add-new-intern" },
+    { title: "Intern Registration", path: "/intern-registration" },
     { title: "Assign Mentors", path: "/assign-mentor" },
     { title: "Ongoing projects", path: "/ongoing-projects" },
     { title: "Completed", path: "/completed" },
     { title: "Members", path: "/members" },
     { title: "Registration Request", path: "/registration-request" },
     { title: "Elevate role Request", path: "/elevate-role" },
-    { title: "Project List ", path: "/project-list" },
+    { title: "Project List", path: "/project-list" },
     { title: "Certificate Issued", path: "/certificates" },
   ];
 
   const buttonDataMentor = [
+    { title: "Intern Registration", path: "/intern-registration" },
     { title: "New Interns", path: "/assign-intern" },
     { title: "Ongoing projects", path: "/ongoing-projects" },
     { title: "Completed", path: "/completed" },
     { title: "Members", path: "/members" },
-    { title: "Project List ", path: "/project-list" },
+    { title: "Project List", path: "/project-list" },
     { title: "Registration Request", path: "/registration-request" },
+  ];
+
+  const buttonDataIntern = [
+    { title: "My Profile", path: "/my-profile" },
+    { title: "My Projects", path: "/my-projects" },
+    { title: "Calendar", path: "/my-tasks" },
+    { title: "Upload Achievements", path: "/upload-achievements" },
+    { title: "View Certificates", path: "/my-certificates" },
   ];
 
   const [data, setData] = useState(null);
@@ -59,6 +71,9 @@ const Home = () => {
       } else if (role === "MENTOR") {
         setData(buttonDataMentor);
         setAuthorization("MENTOR");
+      } else if (role === "INTERN") {
+        setData(buttonDataIntern);
+        setAuthorization("INTERN");
       } else {
         navigate("/sign-in", { replace: true });
       }
@@ -88,7 +103,13 @@ const Home = () => {
       >
         <h1 className="text-white text-3xl sm:text-4xl font-bold z-10">{authorization}</h1>
         <img
-          src={authorization === "HR" ? HrImg : mentorImg}
+          src={
+            authorization === "HR"
+              ? HrImg
+              : authorization === "MENTOR"
+                ? mentorImg
+                : internImg
+          }
           alt="Role Background"
           className="absolute right-0 bottom-0 h-full object-contain opacity-40 pointer-events-none select-none"
         />
