@@ -63,6 +63,11 @@ export default function SignInForm({ mode }) {
         name: "",
         role: "HR",
       });
+        email: "",
+        password: "",
+        name: "",
+        role: "HR",
+      });
       setLoading(false);
     }
   };
@@ -102,7 +107,10 @@ export default function SignInForm({ mode }) {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-1"
+            >
               Password
             </label>
             <div className="relative">

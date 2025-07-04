@@ -6,9 +6,11 @@ import MainButtons from "./MainButtons";
 import DeleteUserModal from "../modals/deleteUserPopUp";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
 
 const Navbar = () => {
+  const [userName, setUserName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDark, setIsDark] = useState(() => {
@@ -59,6 +61,10 @@ const Navbar = () => {
       toast.error("You must be logged in to delete an account.");
       return;
     }
+    if (!token) {
+      toast.error("You must be logged in to delete an account.");
+      return;
+    }
 
     let userId;
     try {
@@ -72,6 +78,15 @@ const Navbar = () => {
       return;
     }
 
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
@@ -122,6 +137,31 @@ const Navbar = () => {
     }
   }, [isDark]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode(token);
+      const userId = decoded.userId;
+
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          setUserName(res.data.fullName || "User");
+        })
+        .catch((err) => {
+          console.error("Failed to fetch user:", err);
+        });
+    } catch (e) {
+      console.error("Token decode error", e);
+    }
+  }, []);
+
   return (
     <>
       <header className="bg-primary dark:bg-[#001d3d] py-4 px-4 flex items-center justify-between space-x-4 overflow-hidden relative">
@@ -145,7 +185,7 @@ const Navbar = () => {
               className="h-6 w-6 mx-1 sm:h-8 sm:w-8 sm:mx-4 rounded-full object-cover"
             />
             <div className="truncate max-w-[120px] text-sm leading-tight">
-               {userName || "User"}
+              {userName || "Loading..."}
             </div>
           </div>
 
@@ -180,7 +220,7 @@ const Navbar = () => {
               >
                 {isDark ? "Light Mode ☀️" : "Dark Mode 🌙"}
               </button>
-
+              {/* sign out  */}
               <MainButtons
                 title={"Log Out"}
                 onClick={() => {
@@ -189,13 +229,14 @@ const Navbar = () => {
                 }}
                 className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
               />
+              {/* change password */}
 
               <MainButtons
                 className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
                 path={"/change-password"}
                 title={"Change password"}
               />
-
+              {/* delete account */}
               <MainButtons
                 title={"Delete Account"}
                 onClick={() => {

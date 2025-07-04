@@ -38,7 +38,7 @@ const Members = () => {
   }, [role]);
 
   const fetchMembers = async () => {
-    if (!token) return; // no token, no fetch
+    if (!token) return;
 
     setLoading(true);
     try {
@@ -60,7 +60,10 @@ const Members = () => {
         }
       );
 
-      setMembers(data.users);
+      const approvedUsers = data.users.filter(
+        (user) => user.status === "approved"
+      );
+      setMembers(approvedUsers);
       setTotalPages(data.totalPages);
     } catch (err) {
       console.error("Failed to fetch members:", err);
@@ -92,11 +95,6 @@ const Members = () => {
     if (!token) return;
 
     try {
-      console.log(
-        "Final API URL:",
-        `${import.meta.env.VITE_API_BASE_URL}/hr/assign-role`
-      );
-
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/hr/assign-role`,
         {
