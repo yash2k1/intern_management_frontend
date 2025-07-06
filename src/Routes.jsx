@@ -11,7 +11,7 @@ import AddNewIntern from './pages/AddNewIntern';
 import AssignMentor from './pages/AssignMentor';
 import RegisterRequest from './pages/RegisterRequest';
 import Members from './pages/Members';
-import ForgotPassword from './pages/ForgotPassword';
+import ForgotPassword from './pages/fongot';
 import VerifyEmail from './pages/VerifyEmail';
 import ChangePassword from './pages/ChangePassword';
 import ProjectList from './pages/ProjectList';
@@ -23,7 +23,7 @@ import ResetPassword from './pages/ResetPassword';
 import SendVerificationEmailForm from './pages/SendVerificationEmailForm';
 import MyProfile from './pages/MyProfile';
 import InternRegistration from './pages/InternRegistration';
-import ViewInternOrUser from './pages/ViewInternOrUser';
+import ViewInternOrUser from './pages/fdfsfdsdf';
 import UpadateNewIntern from './pages/UpdateNewIntern';
 
 const AppRoutes = () => {
