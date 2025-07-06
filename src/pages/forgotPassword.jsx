@@ -46,7 +46,7 @@ const ForgotPassword = () => {
         }
       );
     } finally {
-      setLoading(false); // stop loading after API call finishes
+      setLoading(false); 
     }
   };
 
