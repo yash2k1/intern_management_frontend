@@ -21,7 +21,7 @@ import ElevateRole from './pages/ElevateRole';
 import ProtectedRoute from './ProtectedRoute';
 import ResetPassword from './pages/ResetPassword';
 import SendVerificationEmailForm from './pages/SendVerificationEmailForm';
-import MyProfile from './pages/myProfile';
+import MyProfile from './pages/MyProfile';
 import InternRegistration from './pages/InternRegistration';
 import ViewInternOrUser from './pages/viewInternOrUser';
 import UpadateNewIntern from './pages/UpdateNewIntern';
