@@ -11,10 +11,10 @@ import AddNewIntern from './pages/AddNewIntern';
 import AssignMentor from './pages/AssignMentor';
 import RegisterRequest from './pages/RegisterRequest';
 import Members from './pages/Members';
-import ForgotPassword from './pages/forgotPassword';
+import ForgotPassword from './pages/ForgotPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import ChangePassword from './pages/ChangePassword';
-import ProjectList from './pages/projectList';
+import ProjectList from './pages/ProjectList';
 import ProjectManagement from './pages/ProjectManagement';
 import ElevateRole from './pages/ElevateRole';
 
@@ -23,7 +23,7 @@ import ResetPassword from './pages/ResetPassword';
 import SendVerificationEmailForm from './pages/SendVerificationEmailForm';
 import MyProfile from './pages/MyProfile';
 import InternRegistration from './pages/InternRegistration';
-import ViewInternOrUser from './pages/viewInternOrUser';
+import ViewInternOrUser from './pages/ViewInternOrUser';
 import UpadateNewIntern from './pages/UpdateNewIntern';
 
 const AppRoutes = () => {
