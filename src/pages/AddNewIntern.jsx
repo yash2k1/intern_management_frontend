@@ -139,7 +139,7 @@ if (!token) {
       formPayload.append('fullName', formData.name);
       formPayload.append('email', formData.email);
       formPayload.append('phoneNumber', formData.mobile);
-      formPayload.append('aadhaar', formData.aadhar);
+      formPayload.append('aadhar', formData.aadhar);
       formPayload.append('addressPresent', formData.addressPresent);
       formPayload.append('addressPermanent', formData.addressPermanent);
 
@@ -173,7 +173,7 @@ if (!token) {
         },
       });
       if(urlToken){
-        setTimeout(()=>{navigate('/sign-in')},1500);
+        setTimeout(()=>{navigate('/sign-in', { replace: true })},1500);
       }
       toast.success('Intern created successfully');
       handleCancel();

@@ -63,11 +63,6 @@ export default function SignInForm({ mode }) {
         name: "",
         role: "HR",
       });
-        email: "",
-        password: "",
-        name: "",
-        role: "HR",
-      });
       setLoading(false);
     }
   };

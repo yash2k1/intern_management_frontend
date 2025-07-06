@@ -6,7 +6,6 @@ import MainButtons from "./MainButtons";
 import DeleteUserModal from "../modals/deleteUserPopUp";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
 
 const Navbar = () => {
@@ -18,7 +17,6 @@ const Navbar = () => {
   });
 
   const [role, setRole] = useState("");
-  const [userName, setUserName] = useState("");
 
   const navigate = useNavigate();
 
@@ -61,10 +59,6 @@ const Navbar = () => {
       toast.error("You must be logged in to delete an account.");
       return;
     }
-    if (!token) {
-      toast.error("You must be logged in to delete an account.");
-      return;
-    }
 
     let userId;
     try {
@@ -78,15 +72,6 @@ const Navbar = () => {
       return;
     }
 
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
@@ -111,21 +96,19 @@ const Navbar = () => {
     }
   };
 
-  // Decode token on mount to extract name and role
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setRole(decoded.role || "");
-        setUserName(decoded.userName || ""); // ✅ Set fullName here
+        setUserName(decoded.userName || "");
       } catch (err) {
         console.error("Invalid token:", err);
       }
     }
   }, []);
 
-  // Dark mode toggling
   useEffect(() => {
     const html = document.documentElement;
     if (isDark) {
@@ -185,7 +168,7 @@ const Navbar = () => {
               className="h-6 w-6 mx-1 sm:h-8 sm:w-8 sm:mx-4 rounded-full object-cover"
             />
             <div className="truncate max-w-[120px] text-sm leading-tight">
-              {userName || "Loading..."}
+              {userName || "user"}
             </div>
           </div>
 
@@ -204,7 +187,6 @@ const Navbar = () => {
                 <MainButtons
                   title={"Request HR Role"}
                   onClick={() => {
-                    // implement if needed
                     setIsDropdownOpen(false);
                   }}
                   className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
@@ -220,7 +202,7 @@ const Navbar = () => {
               >
                 {isDark ? "Light Mode ☀️" : "Dark Mode 🌙"}
               </button>
-              {/* sign out  */}
+
               <MainButtons
                 title={"Log Out"}
                 onClick={() => {
@@ -229,14 +211,13 @@ const Navbar = () => {
                 }}
                 className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
               />
-              {/* change password */}
 
               <MainButtons
                 className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
                 path={"/change-password"}
                 title={"Change password"}
               />
-              {/* delete account */}
+
               <MainButtons
                 title={"Delete Account"}
                 onClick={() => {
@@ -254,7 +235,7 @@ const Navbar = () => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
         onDelete={handleAccountDeletion}
-        userName={userName} // ✅ Pass name from token
+        userName={userName}
       />
     </>
   );

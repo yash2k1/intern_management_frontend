@@ -24,6 +24,7 @@ import SendVerificationEmailForm from './pages/SendVerificationEmailForm';
 import MyProfile from './pages/myProfile';
 import InternRegistration from './pages/InternRegistration';
 import ViewInternOrUser from './pages/viewInternOrUser';
+import UpadateNewIntern from './pages/UpdateNewIntern';
 
 const AppRoutes = () => {
   return (
@@ -74,7 +75,10 @@ const AppRoutes = () => {
 
       {/* for HR Only */}
       <Route path="/add-new-intern" element={
-        <ProtectedRoute><AddNewIntern /></ProtectedRoute>
+        <AddNewIntern />
+      } />
+      <Route path="/update-new-intern" element={
+        <UpadateNewIntern/>
       } />
       <Route path="/elevate-role" element={
         <ProtectedRoute><ElevateRole /></ProtectedRoute>
