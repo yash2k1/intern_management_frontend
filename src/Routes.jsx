@@ -6,7 +6,7 @@ import AuthWrapper from './pages/AuthWrapper';
 import Home from './pages/Home';
 import AssignInterns from './pages/AssignInterns';
 import OngoingProjects from './pages/OngoingProjects';
-import Completed from './pages/completed';
+import Completed from './pages/Completed';
 import AddNewIntern from './pages/AddNewIntern';
 import AssignMentor from './pages/AssignMentor';
 import RegisterRequest from './pages/RegisterRequest';
