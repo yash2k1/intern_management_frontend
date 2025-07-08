@@ -24,22 +24,28 @@ const InternRegistration = () => {
   const fetchUsers = async () => {
     if (!token) return;
     setLoading(true);
+
     try {
       const queryParams = new URLSearchParams({
         page: currentPage.toString(),
         limit: itemsPerPage.toString(),
         ...(searchTerm && { name: searchTerm }),
-        ...(filter !== "All" && { role: filter }),
+        roleRequested: "INTERN", // ✅ filter for only INTERNs
       });
 
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/intern/get-all-users-and-intern?${queryParams.toString()}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/user/get-all-users?${queryParams.toString()}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      const internUsers = data.users.filter(
+        (user) => user.roleRequested === "INTERN"
+      );
 
-      setUsers(data.users);
+      setUsers(internUsers);
       setTotalPages(data.totalPages);
     } catch (err) {
       console.error("Failed to fetch users:", err);
@@ -52,6 +58,7 @@ const InternRegistration = () => {
         icon: "📩",
       });
     }
+
     setLoading(false);
   };
 
@@ -74,7 +81,10 @@ const InternRegistration = () => {
       );
       toast.success(res.data.message || "Fill form email sent");
     } catch (err) {
-      const message = err.response?.data?.message || err.message || "Failed to send intern form";
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to send intern form";
       toast.error(message, {
         style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
         icon: "📩",
@@ -95,7 +105,10 @@ const InternRegistration = () => {
       );
       toast.success(res.data.message || "Update form email sent");
     } catch (err) {
-      const message = err.response?.data?.message || err.message || "Failed to send update form";
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to send update form";
       toast.error(message, {
         style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
         icon: "📩",
@@ -117,7 +130,10 @@ const InternRegistration = () => {
       toast.success(res.data.message || "Acceptance email sent");
       setUsers((prev) => prev.filter((user) => user._id !== userId));
     } catch (err) {
-      const message = err.response?.data?.message || err.message || "Failed to send acceptance email";
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to send acceptance email";
       toast.error(message, {
         style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
         icon: "📩",
@@ -139,7 +155,10 @@ const InternRegistration = () => {
       toast.success(res.data.message || "Rejection email sent");
       setUsers((prev) => prev.filter((user) => user._id !== userId));
     } catch (err) {
-      const message = err.response?.data?.message || err.message || "Failed to send rejection email";
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to send rejection email";
       toast.error(message, {
         style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
         icon: "📩",
@@ -296,7 +315,9 @@ const InternRegistration = () => {
                   title="Next"
                   onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                   className={`px-4 py-2 mb-4 bg-primary text-white rounded cursor-pointer ${
-                    currentPage === totalPages ? "opacity-50 pointer-events-none" : ""
+                    currentPage === totalPages
+                      ? "opacity-50 pointer-events-none"
+                      : ""
                   }`}
                 />
               </div>

@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
-import MainButtons from '../Ui/MainButtons';
+import React, { useState } from "react";
+import MainButtons from "../Ui/MainButtons";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-const ApprovedPopUp = ({ isOpen, onClose, onConfirm, student }) => {
+const ApprovedPopUp = ({ isOpen, onClose, student, refreshData }) => {
   const [title, setTitle] = useState("Title of project...");
   const [subTitle, setSubTitle] = useState("Subtitle of project...");
-  const [description, setDescription] = useState("Enter the project details...");
+  const [description, setDescription] = useState(
+    "Enter the project details..."
+  );
 
-  if (!isOpen) return null;
+  if (!isOpen || !student) return null;
+
+  const handleConfirm = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.put(
+        `http://localhost:5000/mentor/intern/${student._id}/status`,
+        { status: "ONGOING" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success("Status updated to ONGOING ✅");
+      onClose(); // Close the popup
+      if (refreshData) refreshData(); // Refresh list if function provided
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Failed to update status ❌");
+    }
+  };
 
   return (
     <div
-      className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
       onClick={onClose}
     >
       <div
@@ -20,12 +47,14 @@ const ApprovedPopUp = ({ isOpen, onClose, onConfirm, student }) => {
         {/* Student Info */}
         <div className="flex items-start space-x-4 mb-4">
           <div className="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-lg font-semibold">
-            {student.name[0]}
+            {student?.userId?.fullName?.[0] || "S"}
           </div>
           <div>
-            <div className="font-semibold text-black dark:text-white">{student.name}</div>
+            <div className="font-semibold text-black dark:text-white">
+              {student?.userId?.fullName || "Student Name"}
+            </div>
             <div className="text-sm text-gray-500 dark:text-gray-300">
-              {student.preference || 'Student Preference'}
+              {student?.preference || "Student Preference"}
             </div>
           </div>
         </div>
@@ -65,15 +94,8 @@ const ApprovedPopUp = ({ isOpen, onClose, onConfirm, student }) => {
 
         {/* Actions */}
         <div className="flex justify-end space-x-3">
-
-          <MainButtons
-            title="Cancel"
-            onClick={() => onClose()}
-          />
-          <MainButtons
-            title="Accepted"
-            onClick={() => onConfirm({ title, subTitle, description })}
-          />
+          <MainButtons title="Cancel" onClick={onClose} />
+          <MainButtons title="Accepted" onClick={handleConfirm} />
         </div>
       </div>
     </div>

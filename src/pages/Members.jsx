@@ -61,7 +61,7 @@ const Members = () => {
       );
 
       const approvedUsers = data.users.filter(
-        (user) => user.status === "approved"
+        (user) => user.status === "APPROVED"
       );
       setMembers(approvedUsers);
       setTotalPages(data.totalPages);

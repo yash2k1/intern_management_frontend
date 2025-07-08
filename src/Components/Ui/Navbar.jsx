@@ -86,13 +86,10 @@ const Navbar = () => {
       localStorage.removeItem("token");
       navigate("/sign-in");
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to delete user.",
-        {
-          style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
-          icon: "❌",
-        }
-      );
+      toast.error(error.response?.data?.message || "Failed to delete user.", {
+        style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
+        icon: "❌",
+      });
     }
   };
 

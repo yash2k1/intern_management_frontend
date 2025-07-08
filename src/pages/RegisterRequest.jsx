@@ -41,7 +41,7 @@ const RegisterRequest = () => {
 
       // Filter users with status: "pending"
       const pendingUsers = res.data.users.filter(
-        (user) => user.status === "pending"
+        (user) => user.status === "PENDING"
       );
       setRequests(pendingUsers);
     } catch (err) {
@@ -136,12 +136,12 @@ const RegisterRequest = () => {
                       <td className="px-4 py-2 border flex gap-2">
                         <MainButtons
                           className="px-3 py-1 bg-green-600 text-white rounded cursor-pointer hover:bg-green-700"
-                          onClick={() => handleAction(req._id, "approved")}
+                          onClick={() => handleAction(req._id, "APPROVED")}
                           title="Accept"
                         />
                         <MainButtons
                           className="px-3 py-1 bg-red-600 text-white rounded cursor-pointer hover:bg-red-700"
-                          onClick={() => handleAction(req._id, "pending")}
+                          onClick={() => handleAction(req._id, "PENDING")}
                           title="Reject"
                         />
                       </td>
