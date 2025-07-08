@@ -43,13 +43,14 @@ const AssignMentor = () => {
           }),
         ]);
 
-        const interns = internRes.data.interns || [];
-        const mentorsData = mentorRes.data.mentors || [];
-        const fieldsData = fieldRes.data.departments || [];
+        const allInterns = internRes.data.interns || [];
+        const approvedInterns = allInterns.filter(
+          (intern) => intern.status === "APPROVED"
+        );
 
-        setStudents(interns);
-        setMentors(mentorsData);
-        setFields(fieldsData);
+        setStudents(approvedInterns);
+        setMentors(mentorRes.data.mentors || []);
+        setFields(fieldRes.data.departments || []);
       } catch (err) {
         console.error("Error fetching data:", err);
         toast.error("Error fetching data from server");
@@ -219,7 +220,7 @@ const AssignMentor = () => {
                     </td>
                     <td className="p-3">
                       {student.suggestedMentor?.userId?.fullName || "N/A"}
-                    </td>                    
+                    </td>
                     <td>
                       <MainButtons
                         title={student.status || "Pending"}

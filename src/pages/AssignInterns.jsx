@@ -28,7 +28,7 @@ const AssignInterns = () => {
 
     try {
       const [internRes, mentorRes] = await Promise.all([
-        axios.get("http://localhost:5000/mentor/my-interns", {
+        axios.get("http://localhost:5000/mentor/requested-interns", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -41,7 +41,7 @@ const AssignInterns = () => {
       ]);
       console.log("internRes", internRes);
       console.log("internRes.data.interns", internRes.data.interns);
-      setInterns(internRes.data.interns);
+      setInterns(internRes.data.requestedInterns);
       setMentors(mentorRes.data.mentors);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -64,27 +64,6 @@ const AssignInterns = () => {
     setSelectedStudent(null);
   };
 
-  const handleConfirm = async ({ title, subTitle, description }) => {
-    try {
-      await axios.put(
-        `http://localhost:5000/mentor/intern/${selectedStudent._id}/status`,
-        { status: "ONGOING" },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      toast.success("Intern approved and status updated");
-      setReload((prev) => !prev);
-    } catch (err) {
-      console.error("Error approving intern:", err);
-      toast.error("Failed to update intern status");
-    }
-    handleClosePopup();
-  };
-
   const handleRejectClick = (student) => {
     setSelectedStudent(student);
     setIsRejectPopupOpen(true);
@@ -100,7 +79,7 @@ const AssignInterns = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentInterns = interns.slice(startIndex, startIndex + itemsPerPage);
   const totalPages = Math.ceil(interns.length / itemsPerPage);
-console.log("currentInterns", currentInterns);
+  console.log("currentInterns", currentInterns);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-text-main dark:text-white flex flex-col">
       <Navbar />
@@ -213,7 +192,6 @@ console.log("currentInterns", currentInterns);
       <ApprovedPopUp
         isOpen={isPopupOpen}
         onClose={handleClosePopup}
-        onConfirm={handleConfirm}
         student={selectedStudent}
       />
       <RejectedPopUp

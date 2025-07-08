@@ -11,14 +11,14 @@ const ApprovedPopUp = ({ isOpen, onClose, student, refreshData }) => {
   );
 
   if (!isOpen || !student) return null;
-
   const handleConfirm = async () => {
+    if (!student) return;
     try {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:5000/mentor/intern/${student._id}/status`,
-        { status: "ONGOING" },
+        `http://localhost:5000/mentor/approve-requested-intern/${student._id}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -26,12 +26,12 @@ const ApprovedPopUp = ({ isOpen, onClose, student, refreshData }) => {
         }
       );
 
-      toast.success("Status updated to ONGOING ✅");
-      onClose(); // Close the popup
-      if (refreshData) refreshData(); // Refresh list if function provided
+      toast.success("Intern approved and moved to mentor's intern list ✅");
+      setReload((prev) => !prev); // Refetch updated intern list
+      handleClosePopup(); // Close the modal
     } catch (error) {
-      console.error("Error updating status:", error);
-      toast.error("Failed to update status ❌");
+      console.error("Error approving intern:", error);
+      toast.error("Failed to approve intern ❌");
     }
   };
 
