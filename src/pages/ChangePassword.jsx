@@ -1,27 +1,109 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import {jwtDecode} from "jwt-decode";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState({
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const toastErrorStyle = {
+    background: "#fee2e2",
+    color: "#b91c1c",
+    fontWeight: "bold",
+  };
+
+  const getUserIdFromToken = () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+      const decoded = jwtDecode(token);
+      return decoded?.userId || null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const userId = getUserIdFromToken();
+
+  // If userId is missing, show error and redirect
+  useEffect(() => {
+    if (!userId) {
+      toast.error("You have to login again", {
+        style: toastErrorStyle,
+        icon: "❌",
+      });
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 1500);
+    }
+  }, [userId, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!userId) return; // Already handled by useEffect
+
     if (newPassword !== confirmPassword) {
-      alert("New passwords do not match.");
+      toast.error("New passwords do not match.", {
+        style: toastErrorStyle,
+        icon: "❌",
+      });
       return;
     }
 
-    // TODO: Replace with your API logic
-    console.log("Old Password:", oldPassword);
-    console.log("New Password:", newPassword);
-    alert("Password changed successfully.");
-    navigate("/sign-in");
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("You have to login again", {
+          style: toastErrorStyle,
+          icon: "❌",
+        });
+        navigate("/sign-in");
+        return;
+      }
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/user/change-password`,
+        { oldPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success(response.data.message || "Password changed successfully.");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
+      setTimeout(() => navigate("/sign-in"), 1500);
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error.response?.data?.message || error.response?.data?.error || "An error occurred. Please try again.",
+        {
+          style: toastErrorStyle,
+          icon: "❌",
+        }
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,15 +119,33 @@ const ChangePassword = () => {
             <label htmlFor="oldPassword" className="block text-sm font-medium mb-1">
               Current Password
             </label>
-            <input
-              id="oldPassword"
-              type={showPassword ? "text" : "password"}
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
-              required
-            />
+            <div className="relative">
+              <input
+                id="oldPassword"
+                type={showPassword.oldPassword ? "text" : "password"}
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPassword({
+                    newPassword: false,
+                    confirmPassword: false,
+                    oldPassword: !showPassword.oldPassword,
+                  })
+                }
+                className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                aria-label={showPassword.oldPassword ? "Hide password" : "Show password"}
+                disabled={loading}
+              >
+                {showPassword.oldPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+              </button>
+            </div>
           </div>
 
           {/* New Password */}
@@ -56,20 +156,28 @@ const ChangePassword = () => {
             <div className="relative">
               <input
                 id="newPassword"
-                type={showPassword ? "text" : "password"}
+                type={showPassword.newPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
                 required
+                disabled={loading}
               />
               <button
                 type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
+                onClick={() =>
+                  setShowPassword({
+                    oldPassword: false,
+                    confirmPassword: false,
+                    newPassword: !showPassword.newPassword,
+                  })
+                }
                 className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword.newPassword ? "Hide password" : "Show password"}
+                disabled={loading}
               >
-                {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                {showPassword.newPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
               </button>
             </div>
           </div>
@@ -79,23 +187,44 @@ const ChangePassword = () => {
             <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
               Confirm New Password
             </label>
-            <input
-              id="confirmPassword"
-              type={showPassword ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
-              required
-            />
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                type={showPassword.confirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+                required
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPassword({
+                    oldPassword: false,
+                    newPassword: false,
+                    confirmPassword: !showPassword.confirmPassword,
+                  })
+                }
+                className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-300"
+                aria-label={showPassword.confirmPassword ? "Hide password" : "Show password"}
+                disabled={loading}
+              >
+                {showPassword.confirmPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+              </button>
+            </div>
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-[#4A90E2] hover:bg-[#3a7fd9] cursor-pointer text-white py-2 rounded shadow transition duration-200"
+            disabled={loading}
+            className={`w-full bg-[#4A90E2] hover:bg-[#3a7fd9] cursor-pointer text-white py-2 rounded shadow transition duration-200 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Update Password
+            {loading ? "Updating..." : "Update Password"}
           </button>
 
           {/* Back to Login */}

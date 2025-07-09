@@ -3,49 +3,67 @@ import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 import MainButtons from "./MainButtons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function SignInForm({ mode }) {
-  const [role, setRole] = useState("HR");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    // role
+    name: "",
+    role: "HR",
   });
-  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.id]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // stop full‑page refresh
-    console.log("✅ handleSubmit fired");
-    setError("");
+    e.preventDefault();
+    if (loading) return;
+
+    setLoading(true);
 
     const endpoint = mode === "sign-in" ? "signin" : "signup";
     const url = `${import.meta.env.VITE_API_BASE_URL}/user/${endpoint}`;
-    console.log("Posting to:", url);
-    console.log("Posting to:", url, { ...formData, role });
+
     try {
-      console.log("inside try block");
-      const { data } = await axios.post(
-        url,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
+      const { data } = await axios.post(url, {
+        fullName: formData.name,
+        email: formData.email,
+        password: formData.password,
+        roleRequested: formData.role,
+      });
 
-        //{ withCredentials: true }
-      );
-      console.log("after const",data);
-      // store token or user info if your API returns one
-      // if (data.token) localStorage.setItem("token", data.token);
-
-      // ✅ redirect to homepage
-      navigate("/", { replace: true });
+      if (mode === "sign-up") {
+        localStorage.setItem("verify_user_id", data.user._id);
+        toast.success("Signup successful! Please verify your email.");
+        navigate("/verify-email");
+      } else {
+        localStorage.setItem("token", data.token);
+        toast.success("Login successful!");
+        navigate("/", { replace: true });
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Request failed");
+      const message = err?.response?.data?.message || "Request failed";
+      toast.error(message, {
+        style: {
+          background: "#fee2e2",
+          color: "#b91c1c",
+          fontWeight: "bold",
+        },
+        icon: "⏰",
+      });
+    } finally {
+      setFormData({
+        email: "",
+        password: "",
+        name: "",
+        role: "HR",
+      });
+      setLoading(false);
     }
   };
 
@@ -54,25 +72,21 @@ export default function SignInForm({ mode }) {
       <div className="w-full max-w-[500px] sm:max-w-md bg-white dark:bg-gray-800 border border-[#002147] dark:border-gray-600 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === "sign-up" && (
-            <>
-              {/* Full  Name  */}
-              <div>
-                <label
-                  htmlFor="fullname"
-                  className="block text-sm font-medium mb-1"
-                >
-                  Full Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Dr. Vikram Sarabhai"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
-                />
-              </div>
-            </>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium mb-1">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Dr. Vikram Sarabhai"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
+              />
+            </div>
           )}
-          {/* Email */}
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-1">
               Email
@@ -80,13 +94,13 @@ export default function SignInForm({ mode }) {
             <input
               id="email"
               type="email"
+              value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
             />
           </div>
 
-          {/* Password */}
           <div>
             <label
               htmlFor="password"
@@ -99,7 +113,7 @@ export default function SignInForm({ mode }) {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={(e)=> setFormData({ ...formData, password: e.target.value })}
+                onChange={handleChange}
                 placeholder="••••••••"
                 className="w-full px-4 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4A90E2] dark:bg-gray-700 dark:text-white"
               />
@@ -114,44 +128,43 @@ export default function SignInForm({ mode }) {
             </div>
           </div>
 
-          {/* Role */}
           <div>
             <label className="block text-sm font-medium mb-2">Role</label>
             <div className="flex flex-col sm:flex-row gap-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="HR"
-                  checked={role === "HR"}
-                  onChange={() => setRole("HR")}
-                  className="accent-[#002147] dark:accent-[#F5A623]"
-                />
-                <span>HR</span>
-              </label>
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="role"
-                  value="Mentor"
-                  checked={role === "Mentor"}
-                  onChange={() => setRole("Mentor")}
-                  className="accent-[#002147] dark:accent-[#F5A623]"
-                />
-                <span>Mentor</span>
-              </label>
+              {["HR", "MENTOR", "INTERN"].map((role) => (
+                <label key={role} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={role}
+                    checked={formData.role === role}
+                    onChange={() => setFormData({ ...formData, role })}
+                    className="accent-[#002147] dark:accent-[#F5A623]"
+                  />
+                  <span>{role}</span>
+                </label>
+              ))}
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-[#4A90E2] hover:bg-[#3a7fd9] text-white py-2 rounded shadow transition duration-200"
+            disabled={loading}
+            className={`w-full py-2 rounded shadow transition duration-200 cursor-pointer ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#4A90E2] hover:bg-[#3a7fd9] text-white"
+            }`}
           >
-            {mode === "sign-in" ? "Login" : "Register"}
+            {loading
+              ? mode === "sign-in"
+                ? "Logging in..."
+                : "Registering..."
+              : mode === "sign-in"
+              ? "Login"
+              : "Register"}
           </button>
 
-          {/* Links */}
           <div className="text-sm flex flex-col sm:flex-row justify-between mt-4 gap-2">
             <MainButtons
               className="text-black dark:text-white underline cursor-pointer"
@@ -165,13 +178,11 @@ export default function SignInForm({ mode }) {
               path={"/forgot-password"}
               title={"Forgot password?"}
             />
-            {mode == "sign-in" && (
-              <MainButtons
-                className="text-black dark:text-white underline cursor-pointer"
-                path={"/change-password"}
-                title={"Change password?"}
-              />
-            )}
+                <MainButtons
+              className="text-black dark:text-white underline cursor-pointer"
+              path={"/send-verify-email"}
+              title={"Email verification?"}
+            />
           </div>
         </form>
       </div>

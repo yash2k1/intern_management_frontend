@@ -21,18 +21,24 @@ const OTPInputBox = ({ id, previousId, nextId, value, onValueChange, handleSubmi
   };
 
   return (
-    <input
-      id={id}
-      name={id}
-      type="text"
-      inputMode="numeric"
-      className={`w-10 h-12 text-center text-xl border border-gray-400 rounded mx-1
-        ${value === "" ? "bg-gray-200 text-gray-500" : "bg-white text-black"}`}
-      value={value}
-      maxLength={1}
-      onChange={(e) => onValueChange(id, e.target.value.replace(/[^0-9]/g, ""))}
-      onKeyUp={handleKeyUp}
-    />
+  <input
+  id={id}
+  name={id}
+  type="text"
+  inputMode="numeric"
+  className={`
+    w-8 h-10 sm:w-10 sm:h-12  /* smaller on small screens, bigger on sm and up */
+    text-center text-xl
+    border border-gray-400 rounded
+    mx-0.5 sm:mx-1
+    ${value === "" ? "bg-gray-200 text-gray-500" : "bg-white text-black"}
+  `}
+  value={value}
+  maxLength={1}
+  onChange={(e) => onValueChange(id, e.target.value.replace(/[^0-9]/g, ""))}
+  onKeyUp={handleKeyUp}
+/>
+
   );
 };
 

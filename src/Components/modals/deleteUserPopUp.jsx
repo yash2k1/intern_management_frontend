@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import MainButtons from '../Ui/MainButtons';
 
+
 const DeleteUserModal = ({ isOpen, onClose, onDelete, userName }) => {
   const [inputName, setInputName] = useState('');
 
   if (!isOpen) return null;
 
+
   const handleDelete = () => {
-    if (inputName === userName) {
-      onDelete();
-      setInputName('');
-    }
+    setInputName('');
+    // Call the onDelete prop (which should handle actual deletion)
+    onDelete();
   };
+
 
   const handleClose = () => {
     setInputName('');
@@ -31,7 +33,7 @@ const DeleteUserModal = ({ isOpen, onClose, onDelete, userName }) => {
           Delete Your Account
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-1">
-          This action is irreversible. To confirm, type your name exactly as shown:{`"${userName}"`}
+          This action is irreversible. To confirm, type your name exactly as shown: <strong>{`"${userName}"`}</strong>
         </p>
         <input
           type="text"
@@ -51,9 +53,8 @@ const DeleteUserModal = ({ isOpen, onClose, onDelete, userName }) => {
             title="Delete"
             onClick={handleDelete}
             disabled={inputName !== userName}
-            className={`cursor-pointer ${
-              inputName !== userName ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={` bg-alert px-4 py-2 rounded-full text-white hover:bg-alert-light ${inputName != userName ? 'opacity-[50%] cursor-not-allowed ' : 'cursor-pointer'
+              }`}
           />
         </div>
       </div>
