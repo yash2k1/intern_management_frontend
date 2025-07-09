@@ -133,18 +133,21 @@ const RegisterRequest = () => {
                       <td className="px-4 py-2 border">{req.fullName}</td>
                       <td className="px-4 py-2 border">{req.createdAt}</td>
                       <td className="px-4 py-2 border">{req.email}</td>
-                      <td className="px-4 py-2 border flex gap-2">
-                        <MainButtons
-                          className="px-3 py-1 bg-green-600 text-white rounded cursor-pointer hover:bg-green-700"
-                          onClick={() => handleAction(req._id, "APPROVED")}
-                          title="Accept"
-                        />
-                        <MainButtons
-                          className="px-3 py-1 bg-red-600 text-white rounded cursor-pointer hover:bg-red-700"
-                          onClick={() => handleAction(req._id, "PENDING")}
-                          title="Reject"
-                        />
+                      <td className="px-4 py-2 border">
+                        <div className="flex flex-wrap justify-center gap-2">
+                          <MainButtons
+                            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer"
+                            onClick={() => handleAction(req._id, "APPROVED")}
+                            title="Accept"
+                          />
+                          <MainButtons
+                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer"
+                            onClick={() => handleAction(req._id, "PENDING")}
+                            title="Reject"
+                          />
+                        </div>
                       </td>
+
                     </tr>
                   ))
                 )}
@@ -158,9 +161,8 @@ const RegisterRequest = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${
-                    currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                  }`}
+                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${currentPage === 1 ? "opacity-50 pointer-events-none" : ""
+                    }`}
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   Page {currentPage} of {totalPages}
@@ -170,11 +172,10 @@ const RegisterRequest = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${
-                    currentPage === totalPages
+                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${currentPage === totalPages
                       ? "opacity-50 pointer-events-none"
                       : ""
-                  }`}
+                    }`}
                 />
               </div>
             )}

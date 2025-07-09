@@ -50,8 +50,7 @@ const Members = () => {
       });
 
       const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
+        `${import.meta.env.VITE_API_BASE_URL
         }/user/get-all-users?${queryParams.toString()}`,
         {
           headers: {
@@ -60,11 +59,13 @@ const Members = () => {
         }
       );
 
-      const approvedUsers = data.users.filter(
-        (user) => user.status === "APPROVED"
-      );
+      const approvedUsers = data.users.filter((user) => user.status === "APPROVED");
       setMembers(approvedUsers);
-      setTotalPages(data.totalPages);
+
+      // Recalculate totalPages based on filtered data
+      const newTotalPages = Math.ceil(approvedUsers.length / itemsPerPage);
+      setTotalPages(newTotalPages || 1);
+
     } catch (err) {
       console.error("Failed to fetch members:", err);
     }
@@ -228,9 +229,8 @@ const Members = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${
-                    currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                  }`}
+                  className={`px-4 py-2 bg-primary text-white rounded cursor-pointer ${currentPage === 1 ? "opacity-50 pointer-events-none" : ""
+                    }`}
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   Page {currentPage} of {totalPages}
@@ -240,11 +240,10 @@ const Members = () => {
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  className={`px-4 py-2 mb-4 bg-primary text-white rounded cursor-pointer ${
-                    currentPage === totalPages
+                  className={`px-4 py-2 mb-4 bg-primary text-white rounded cursor-pointer ${currentPage === totalPages
                       ? "opacity-50 pointer-events-none"
                       : ""
-                  }`}
+                    }`}
                 />
               </div>
             )}

@@ -14,14 +14,14 @@ const Home = () => {
 
   // Button definitions for each role
   const buttonDataHR = [
-    { title: "Add New Interns", path: "/add-new-intern" },
+    // { title: "Add New Interns", path: "/add-new-intern" },
     { title: "Intern Registration", path: "/intern-registration" },
     { title: "Assign Mentors", path: "/assign-mentor" },
-    { title: "Ongoing projects", path: "/ongoing-projects" },
+    // { title: "Ongoing projects", path: "/ongoing-projects" },
     { title: "Members", path: "/members" },
     { title: "Registration Request", path: "/registration-request" },
-    { title: "Elevate role Request", path: "/elevate-role" },
-    { title: "Project List", path: "/project-list" },
+    // { title: "Elevate role Request", path: "/elevate-role" },
+    // { title: "Project List", path: "/project-list" },
     { title: "Departments", path: "/departments" },
     { title: "Completed", path: "/completed" },
   ];
@@ -29,18 +29,18 @@ const Home = () => {
   const buttonDataMentor = [
     { title: "Intern Registration", path: "/intern-registration" },
     { title: "New Interns", path: "/assign-intern" },
-    { title: "Ongoing projects", path: "/ongoing-projects" },
-    { title: "Completed", path: "/completed" },
-    { title: "Members", path: "/members" },
-    { title: "Project List", path: "/project-list" },
+    // { title: "Ongoing projects", path: "/ongoing-projects" },
+    // { title: "Completed", path: "/completed" },
+    // { title: "Members", path: "/members" },
+    // { title: "Project List", path: "/project-list" },
     { title: "Registration Request", path: "/registration-request" },
   ];
 
   const buttonDataIntern = [
     { title: "My Profile", path: "/my-profile" },
-    { title: "My Projects", path: "/my-projects" },
-    { title: "Calendar", path: "/my-tasks" },
-    { title: "Upload Achievements", path: "/upload-achievements" },
+    // { title: "My Projects", path: "/my-projects" },
+    // { title: "Calendar", path: "/my-tasks" },
+    // { title: "Upload Achievements", path: "/upload-achievements" },
     { title: "View Certificates", path: "/my-certificate" },
   ];
 
