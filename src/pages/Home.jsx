@@ -18,12 +18,12 @@ const Home = () => {
     { title: "Intern Registration", path: "/intern-registration" },
     { title: "Assign Mentors", path: "/assign-mentor" },
     { title: "Ongoing projects", path: "/ongoing-projects" },
-    { title: "Completed", path: "/completed" },
     { title: "Members", path: "/members" },
     { title: "Registration Request", path: "/registration-request" },
     { title: "Elevate role Request", path: "/elevate-role" },
     { title: "Project List", path: "/project-list" },
-    { title: "Certificate Issued", path: "/certificates" },
+    { title: "Departments", path: "/departments" },
+    { title: "Completed", path: "/completed" },
   ];
 
   const buttonDataMentor = [
@@ -41,7 +41,7 @@ const Home = () => {
     { title: "My Projects", path: "/my-projects" },
     { title: "Calendar", path: "/my-tasks" },
     { title: "Upload Achievements", path: "/upload-achievements" },
-    { title: "View Certificates", path: "/my-certificates" },
+    { title: "View Certificates", path: "/my-certificate" },
   ];
 
   const [data, setData] = useState(null);
@@ -117,13 +117,13 @@ const Home = () => {
 
       {/* Button Grid */}
       <div className="flex-grow flex flex-col justify-center items-center px-4 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-4xl">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-6 w-full max-w-4xl">
           {data.map((btn, index) => (
             <MainButtons
               key={index}
               title={btn.title}
               path={btn.path}
-              className="cursor-pointer px-4 py-2 rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-primary transition-all w-full aspect-auto sm:aspect-[3/1] sm:w-60 p-4"
+              className="cursor-pointer px-4 py-2 rounded-full text-sm bg-secondary text-white font-medium shadow-md hover:bg-primary dark:hover:bg-primary transition-all w-full aspect-auto sm:aspect-[3/1] md:w-60 p-4"
             />
           ))}
         </div>

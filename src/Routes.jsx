@@ -25,6 +25,9 @@ import MyProfile from './pages/MyProfile';
 import InternRegistration from './pages/InternRegistration';
 import ViewInternOrUser from './pages/ViewInternOrUser';
 import UpadateNewIntern from './pages/UpdateNewIntern';
+import Departments from './pages/Departments';
+import CertificateIssue from './pages/CertificateIssue';
+import ViewCertificate from './pages/ViewCertificate';
 
 const AppRoutes = () => {
   return (
@@ -77,6 +80,9 @@ const AppRoutes = () => {
       <Route path="/add-new-intern" element={
         <AddNewIntern />
       } />
+      <Route path="/certificate-issue" element={
+        <CertificateIssue />
+      } />
       <Route path="/update-new-intern" element={
         <UpadateNewIntern/>
       } />
@@ -86,9 +92,15 @@ const AppRoutes = () => {
       <Route path="/assign-mentor" element={
         <ProtectedRoute><AssignMentor /></ProtectedRoute>
       } />
+      <Route path="/departments" element={
+        <ProtectedRoute><Departments/></ProtectedRoute>
+      } />
       {/* for intern only */}
       <Route path="/my-profile" element={
         <ProtectedRoute><MyProfile /></ProtectedRoute>
+      } />
+      <Route path="/my-certificate" element={
+        <ProtectedRoute><ViewCertificate/></ProtectedRoute>
       } />
     </Routes>
   );

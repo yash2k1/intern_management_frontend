@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "../UserRowAnimation.css";
+import "../AnimationStyle/UserRowAnimation.css";
 
 const InternRegistration = () => {
   const [users, setUsers] = useState([]);

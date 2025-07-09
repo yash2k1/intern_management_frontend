@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import drdo_logo_0 from "../../assets/drdo_logo_0.png";
 import img from "../../assets/download.png";
 import { useNavigate } from "react-router-dom";
@@ -7,39 +7,63 @@ import DeleteUserModal from "../modals/deleteUserPopUp";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
+import NavbarDropdownData from "../../data/NavbarDropDownData";
+import { CSSTransition } from "react-transition-group";
+import "../../AnimationStyle/NavbarDropdown.css";
+import DropdownPortal from "./DropdownPortal";
 
 const Navbar = () => {
   const [userName, setUserName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
+  const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") === "dark");
   const [role, setRole] = useState("");
 
   const navigate = useNavigate();
+  const profileRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const [dropdownStyle, setDropdownStyle] = useState({});
 
-  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => {
+      const newState = !prev;
+      if (!newState || !profileRef.current) return newState;
+
+      const rect = profileRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        position: "absolute",
+        top: rect.bottom + 8 + window.scrollY,
+        left: rect.left + rect.width - 224,
+        zIndex: 500,
+      });
+
+      return newState;
+    });
+  };
+
+  const showNoTokenToast = () => {
+    toast.error("No token found. Please login.", {
+      style: {
+        background: "#fee2e2",
+        color: "#b91c1c",
+        fontWeight: "bold",
+      },
+      icon: "📩",
+    });
+  };
 
   const handleSignOut = async () => {
     try {
       const token = localStorage.getItem("token");
-
       if (!token) {
-        console.warn("⚠️ No token found. User may already be logged out.");
-        return navigate("/sign-in");
+        showNoTokenToast();
+        navigate("/sign-in");
+        return;
       }
 
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/user/signout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/signout`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       localStorage.removeItem("token");
       navigate("/sign-in");
@@ -48,39 +72,22 @@ const Navbar = () => {
     }
   };
 
-  const handleSignInAnother = () => {
-    navigate("/sign-in");
-  };
+  const handleSignInAnother = () => navigate("/sign-in");
 
   const handleAccountDeletion = async () => {
     const token = localStorage.getItem("token");
-
     if (!token) {
-      toast.error("You must be logged in to delete an account.");
+      showNoTokenToast();
       return;
     }
 
-    let userId;
     try {
       const decoded = jwtDecode(token);
-      userId = decoded.userId;
-    } catch (err) {
-      toast.error("Invalid token.", {
-        style: { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" },
-        icon: "❌",
-      });
-      return;
-    }
+      const userId = decoded.userId;
 
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       toast.success("User deleted successfully.");
       localStorage.removeItem("token");
@@ -125,22 +132,31 @@ const Navbar = () => {
       const decoded = jwtDecode(token);
       const userId = decoded.userId;
 
-      axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          setUserName(res.data.fullName || "User");
-        })
-        .catch((err) => {
-          console.error("Failed to fetch user:", err);
-        });
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }).then((res) => {
+        setUserName(res.data.fullName || "User");
+      }).catch((err) => {
+        console.error("Failed to fetch user:", err);
+      });
     } catch (e) {
       console.error("Token decode error", e);
     }
   }, []);
+
+  const handlers = {
+    signInAnother: handleSignInAnother,
+    requestHR: () => setIsDropdownOpen(false),
+    toggleTheme: () => {
+      setIsDark(!isDark);
+      setIsDropdownOpen(false);
+    },
+    logout: handleSignOut,
+    deleteAccount: () => {
+      setShowDeleteModal(true);
+      setIsDropdownOpen(false);
+    },
+  };
 
   return (
     <>
@@ -154,11 +170,8 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="relative">
-          <div
-            className="flex items-center space-x-2 text-white cursor-pointer"
-            onClick={toggleDropdown}
-          >
+        <div className="relative" ref={profileRef}>
+          <div className="flex items-center space-x-2 text-white cursor-pointer" onClick={toggleDropdown}>
             <img
               src={img}
               alt="Profile"
@@ -168,65 +181,45 @@ const Navbar = () => {
               {userName || "user"}
             </div>
           </div>
-
-          {isDropdownOpen && (
-            <div className="fixed right-2 mt-2 w-56 rounded-lg shadow-lg z-50 text-sm">
-              <MainButtons
-                title={"Sign in with another account"}
-                onClick={() => {
-                  handleSignInAnother();
-                  setIsDropdownOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
-              />
-
-              {role === "Mentor" && (
-                <MainButtons
-                  title={"Request HR Role"}
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
-                />
-              )}
-
-              <button
-                onClick={() => {
-                  setIsDark(!isDark);
-                  setIsDropdownOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white rounded-b-lg"
-              >
-                {isDark ? "Light Mode ☀️" : "Dark Mode 🌙"}
-              </button>
-
-              <MainButtons
-                title={"Log Out"}
-                onClick={() => {
-                  handleSignOut();
-                  setIsDropdownOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
-              />
-
-              <MainButtons
-                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
-                path={"/change-password"}
-                title={"Change password"}
-              />
-
-              <MainButtons
-                title={"Delete Account"}
-                onClick={() => {
-                  setShowDeleteModal(true);
-                  setIsDropdownOpen(false);
-                }}
-                className="w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-red-700 text-white rounded-b-lg"
-              />
-            </div>
-          )}
         </div>
       </header>
+
+      {/* Dropdown rendered via portal */}
+      <DropdownPortal>
+        <CSSTransition
+          in={isDropdownOpen}
+          timeout={200}
+          classNames="dropdown"
+          unmountOnExit
+          nodeRef={dropdownRef}
+        >
+          <div
+            ref={dropdownRef}
+            style={dropdownStyle}
+            className="w-56 rounded-lg shadow-lg text-sm bg-secondary"
+          >
+            {NavbarDropdownData.map((item, index) => {
+              if (item.condition && !item.condition(role)) return null;
+              const title = typeof item.title === "function" ? item.title(isDark) : item.title;
+              const onClick = handlers[item.key];
+              const path = item.path;
+
+              return (
+                <MainButtons
+                  key={index}
+                  title={title}
+                  onClick={onClick}
+                  path={path}
+                  className={
+                    item.className ||
+                    "w-full text-left px-4 py-2 cursor-pointer bg-secondary hover:bg-primary text-white"
+                  }
+                />
+              );
+            })}
+          </div>
+        </CSSTransition>
+      </DropdownPortal>
 
       <DeleteUserModal
         isOpen={showDeleteModal}
